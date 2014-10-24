@@ -1,0 +1,9 @@
+.*sc
+.sonar
+/bin
+/target
+log.txt
+Db4o_Database
+*.cache
+*.class
+*.sc
