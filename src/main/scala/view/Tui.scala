@@ -4,12 +4,21 @@ import scala.swing._
 import scala.swing.event._
 import main.scala.util.Observer
 import main.scala.controller.Controller
+import main.scala.model.Event
+import main.scala.model.GameEnd
+import main.scala.model.Update
 
-class Tui(var controller: Controller) extends Observer {
+class Tui(var controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI  
-  def update = ui.area.text = controller.playground.toString
-  update
+  ui.area.text = controller.playground.toString
+  def update(e : Event) = {
+    e match {
+      case update	: Update => ui.area.text = controller.playground.toString
+      case moved 	: GameEnd => println("Game end")
+    }
+    ui.area.text = controller.playground.toString
+  }
   ui.visible = true
   
   var position = controller.playground.getPlayers.head._1

@@ -1,9 +1,6 @@
 package main.scala.model
 
-sealed trait Move
 
-final case class PlayerMove(from : Position, fromItem : Item, to : Position, toItem : Item) extends Move
-final case class InvalidMove(reason : String) extends Move
 
 class Playground(var items : Map[Position, Item]) {
     def getPlayers = items.filter(_._2.isInstanceOf[Player])

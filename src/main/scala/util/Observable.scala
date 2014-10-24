@@ -1,12 +1,12 @@
 package main.scala.util
 
-trait Observer {
-  def update
+trait Observer[Event] {
+  def update(e : Event)
 }
 
-class Observable {
-  var subscribers:Vector[Observer] = Vector()
-  def add(s:Observer) = subscribers=subscribers:+s
-  def remove(s:Observer) = subscribers=subscribers.filterNot(o=>o==s)
-  def notifyObservers = subscribers.foreach(o=>o.update)
+class Observable[Event] {
+  var subscribers:Vector[Observer[Event]] = Vector()
+  def add(s:Observer[Event]) = subscribers=subscribers:+s
+  def remove(s:Observer[Event]) = subscribers=subscribers.filterNot(o=>o==s)
+  def notifyObservers(e:Event) = subscribers.foreach(o=>o.update(e))
 }

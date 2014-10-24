@@ -11,6 +11,5 @@ object Portals {
     val reader = new PlaygroundReader("res/level1.txt")
     val playground = new Playground(reader.items)
     val tui = new Tui(new Controller(playground))
-    println (playground.getPlayers)
   }
 }
