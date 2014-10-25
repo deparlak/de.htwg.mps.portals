@@ -10,8 +10,9 @@ import main.scala.model.Update
 
 class Tui(var controller: Controller) extends Observer[Event] {
   controller.add(this)
-  val ui = new UI  
-  ui.area.text = controller.playground.toString
+  val ui = new UI()
+  var position = controller.playground.getPlayers.head._1
+
   def update(e : Event) = {
     e match {
       case update	: Update => ui.area.text = controller.playground.toString
@@ -19,16 +20,13 @@ class Tui(var controller: Controller) extends Observer[Event] {
     }
     ui.area.text = controller.playground.toString
   }
-  ui.visible = true
   
-  var position = controller.playground.getPlayers.head._1
-  println("Number of Players : "+controller.playground.getPlayers.size);
-
   class UI extends MainFrame {
     title = "Portals"
 	preferredSize = new Dimension(320, 240)
 
-	val area = new TextArea("*hallo test") {
+	val area = new TextArea() {
+      text = controller.playground.toString
 	  editable = false
 	  font = new Font("monospaced", 0, 14)
 	  listenTo(keys)
@@ -44,5 +42,7 @@ class Tui(var controller: Controller) extends Observer[Event] {
       contents += area
       border = Swing.EmptyBorder(10,10,10,10)
     }
+    
+    visible = true
   }
 }
