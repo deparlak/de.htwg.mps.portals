@@ -1,14 +1,7 @@
 package main.scala.controller
 
 import main.scala.util.Observable
-import main.scala.model.Playground
-import main.scala.model.Position
-import main.scala.model.Move
-import main.scala.model.PlayerMove
-import main.scala.model.InvalidMove
-import main.scala.model.InvalidMove
-import main.scala.model.Update
-import main.scala.model.Event
+import main.scala.model._
 
 class Controller(var playground : Playground) extends Observable[Event]{
 	def moveUp(position : Position) = move(position, position.up())
@@ -19,7 +12,8 @@ class Controller(var playground : Playground) extends Observable[Event]{
 	private def move(from : Position, to : Position) : Position = {
 	  println("Move " + from + " -> " + to)
 	  playground.move(from, to) match {
-	    case moved : PlayerMove	 	=> notifyObservers(new Update); moved.to
+	    case moved : PlayerMove	 	=> notifyObservers(new Update); to
+	    case moved : BotMove		=> notifyObservers(new Update); to
 	    case error : InvalidMove  	=> println(error.reason); from
 	  }
 	}

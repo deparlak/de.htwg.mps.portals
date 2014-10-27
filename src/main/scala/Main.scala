@@ -1,6 +1,6 @@
 package main.scala
 
-import main.scala.controller.Controller
+import main.scala.controller._
 import main.scala.model._
 import main.scala.model.helper._
 import main.scala.view.Tui

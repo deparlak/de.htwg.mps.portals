@@ -16,7 +16,7 @@ class Tui(var controller: Controller) extends Observer[Event] {
   def update(e : Event) = {
     e match {
       case update	: Update => ui.area.text = controller.playground.toString
-      case moved 	: GameEnd => println("Game end")
+      case _ 		: GameEnd => println("Game end")
     }
     ui.area.text = controller.playground.toString
   }
