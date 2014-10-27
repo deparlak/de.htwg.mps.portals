@@ -12,8 +12,9 @@ class Controller(var playground : Playground) extends Observable[Event]{
 	private def move(from : Position, to : Position) : Position = {
 	  println("Move " + from + " -> " + to)
 	  playground.move(from, to) match {
-	    case moved : PlayerMove	 	=> notifyObservers(new Update); to
-	    case moved : BotMove		=> notifyObservers(new Update); to
+	    case moved : PlayerToWay 	=> notifyObservers(new Update); to
+	    case moved : PlayerToPortal	=> notifyObservers(new GameEnd); to
+	    case moved : BotToWay		=> notifyObservers(new Update); to
 	    case error : InvalidMove  	=> println(error.reason); from
 	  }
 	}

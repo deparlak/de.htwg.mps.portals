@@ -3,8 +3,9 @@ package main.scala.model
 // Possible moves.
 sealed trait Move
 
-final case class PlayerMove() extends Move
-final case class BotMove() extends Move
+final case class PlayerToWay() extends Move
+final case class PlayerToPortal() extends Move
+final case class BotToWay() extends Move
 final case class InvalidMove(reason : String) extends Move
 
 
@@ -24,9 +25,10 @@ class Playground(var items : Map[Position, Item]) {
 	  
 	  // check for valid moves.
 	  (fromItem.get, toItem.get) match {
-	    case (player : Player, way : Way) 	=> doMove; PlayerMove()
-	    case (bot : Bot, way : Way)			=> doMove; BotMove()
-	    case _ 				 				=> InvalidMove("Invalid Move")
+	    case (player : Player, way : Way) 		=> doMove; PlayerToWay()
+	    case (player : Player, portal : Portal) => doMove; PlayerToPortal()
+	    case (bot : Bot, way : Way)				=> doMove; BotToWay()
+	    case _ 				 					=> InvalidMove("Invalid Move")
 	  }
 	}
     

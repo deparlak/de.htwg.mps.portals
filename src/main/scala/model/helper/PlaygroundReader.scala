@@ -15,6 +15,7 @@ class PlaygroundReader(file : String) {
   	  case '|' 		=> items += (new Position(x, y) -> new Wall); x += 1
   	  case 'O'      => items += (new Position(x, y) -> new Player); x += 1
   	  case ' '      => items += (new Position(x, y) -> new Way); x += 1
+  	  case 'P'      => items += (new Position(x, y) -> new Portal); x += 1
   	  case '\n'		=> x = 0; y += 1
   	  case '\r'     => None
       case _ 		=> print("TODO Exception return, because of invalid character")
