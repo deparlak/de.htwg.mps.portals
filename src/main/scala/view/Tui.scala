@@ -5,8 +5,7 @@ import scala.swing.event._
 import main.scala.util.Observer
 import main.scala.controller.Controller
 import main.scala.model.Event
-import main.scala.model.GameEnd
-import main.scala.model.Update
+import main.scala.model._
 
 class Tui(var controller: Controller) extends Observer[Event] {
   controller.add(this)
@@ -15,7 +14,7 @@ class Tui(var controller: Controller) extends Observer[Event] {
 
   def update(e : Event) = {
     e match {
-      case update	: Update => ui.area.text = controller.playground.toString
+      case _    	: Update  => ui.area.text = controller.playground.toString
       case _ 		: GameEnd => println("Game end")
     }
     ui.area.text = controller.playground.toString

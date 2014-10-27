@@ -3,7 +3,7 @@ package main.scala.controller
 import main.scala.util.Observable
 import main.scala.model._
 
-class Controller(var playground : Playground) extends Observable[Event]{
+class Controller(val playground : Playground) extends Observable[Event]{
 	def moveUp(position : Position) = move(position, position.up())
 	def moveDown(position : Position) = move(position, position.down())
 	def moveLeft(position : Position) = move(position, position.left())

@@ -11,6 +11,7 @@ final case class InvalidMove(reason : String) extends Move
 
 class Playground(var items : Map[Position, Item]) {
     def getPlayers = items.filter(_._2.isInstanceOf[Player])
+    def getBots = items.filter(_._2.isInstanceOf[Bot])
     
 	def move(from : Position, to : Position) : Move = {
 	  val fromItem = items.get(from)
