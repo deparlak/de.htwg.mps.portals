@@ -15,9 +15,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
   var files = Path("res") walkFilter { p => p.isFile }
   var position = new Position(0,0)
   var gameRunning = false
- 
-  printMenu
-  
+  ui.area.text = "Welcome to Portals. Press enter to start."
 
   def update(e : Event) = {
     e match {
@@ -26,13 +24,10 @@ class Tui(val controller: Controller) extends Observer[Event] {
       case _ 		: GameEnd => ui.area.text = "Game End. Press enter for the next level."; gameRunning = false;
     }
   }
-  
-  def printMenu : Unit = ui.area.text = "Welcome to Portals. Press enter to start."
     
   def firstLevel : Unit = {
-    println("firstLevel")
     files = Path("res") walkFilter { p => p.isFile }; 
-    nextLevel
+    if (files.hasNext) nextLevel
   }
     
   def nextLevel : Unit = if (files.hasNext) controller.load(files.next.toString) else firstLevel
@@ -47,10 +42,10 @@ class Tui(val controller: Controller) extends Observer[Event] {
 	  font = new Font("monospaced", 0, 14)
 	  listenTo(keys)
 	  reactions += {
-	    case KeyPressed(_, Key.Up    , _, _) => if (gameRunning) controller.moveUp(position)
-	    case KeyPressed(_, Key.Down  , _, _) => if (gameRunning) controller.moveDown(position)
-	    case KeyPressed(_, Key.Left  , _, _) => if (gameRunning) controller.moveLeft(position)
-	    case KeyPressed(_, Key.Right , _, _) => if (gameRunning) controller.moveRight(position)
+	    case KeyPressed(_, Key.Up    , _, _) => if (gameRunning) position = controller.moveUp(position)
+	    case KeyPressed(_, Key.Down  , _, _) => if (gameRunning) position = controller.moveDown(position)
+	    case KeyPressed(_, Key.Left  , _, _) => if (gameRunning) position = controller.moveLeft(position)
+	    case KeyPressed(_, Key.Right , _, _) => if (gameRunning) position = controller.moveRight(position)
 	    case KeyPressed(_, Key.Enter , _, _) => if (!gameRunning) nextLevel
 	  }
 	}
