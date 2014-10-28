@@ -12,25 +12,38 @@ import scala.reflect.io.Path
 class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI()
-  var files = Path("res") walkFilter { p => p.isFile }
+  var level = Path("res") walkFilter { p => p.isFile }
   var position = new Position(0,0)
   var gameRunning = false
   ui.area.text = "Welcome to Portals. Press enter to start."
 
   def update(e : Event) = {
     e match {
-      case _		: NewGame => ui.area.text = controller.playground.toString; gameRunning = true; position = controller.playground.getPlayers.head._1;
-      case _    	: Update  => ui.area.text = controller.playground.toString
-      case _ 		: GameEnd => ui.area.text = "Game End. Press enter for the next level."; gameRunning = false;
+      case _		: NewGame => newGame
+      case _    	: Update  => updatePlayground
+      case _ 		: GameEnd => gameEnd
     }
+  }
+  
+  def newGame = {
+    ui.area.text = controller.playground.toString
+    position = controller.playground.getPlayers.head._1
+    gameRunning = true
+  }
+  
+  def updatePlayground = ui.area.text = controller.playground.toString
+  
+  def gameEnd = {
+    ui.area.text = "Game End. Press enter for the next level."
+    gameRunning = false
   }
     
   def firstLevel : Unit = {
-    files = Path("res") walkFilter { p => p.isFile }; 
-    if (files.hasNext) nextLevel
+    level = Path("res") walkFilter { p => p.isFile }; 
+    if (level.hasNext) nextLevel
   }
     
-  def nextLevel : Unit = if (files.hasNext) controller.load(files.next.toString) else firstLevel
+  def nextLevel : Unit = if (level.hasNext) controller.load(level.next.toString) else firstLevel
   
   class UI extends MainFrame {
     title = "Portals"
