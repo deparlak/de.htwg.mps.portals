@@ -26,8 +26,8 @@ class Playground(var items : Map[Position, Item]) {
 	def move(from : Position, to : Position) : Move = {
 	  val fromItem = items.get(from)
 	  val toItem = items.get(to)
-	  if (None == fromItem)	return InvalidMove("position not exist : "+from)
-	  if (None == toItem) return InvalidMove("position not exist : "+to)
+	  if (None == fromItem)	{invalidMove; return InvalidMove("position not exist : "+from)}
+	  if (None == toItem) {invalidMove; return InvalidMove("position not exist : "+to)}
 	  
 	  def validMove = {
 		  items += (from -> fromItem.get.rebuild)
@@ -74,6 +74,7 @@ class Playground(var items : Map[Position, Item]) {
 	  	  case '1'      => items += (new Position(x, y) -> new Player("1", NoMove())); x += 1
 	  	  case ' '      => items += (new Position(x, y) -> new Way); x += 1
 	  	  case 'P'      => items += (new Position(x, y) -> new Portal); x += 1
+	  	  case 'B'		=> items += (new Position(x, y) -> new Bot(Left())); x += 1
 	  	  case '\n'		=> x = 0; y += 1
 	  	  case '\r'     => None
 	      case _ 		=> print("TODO Exception return, because of invalid character")

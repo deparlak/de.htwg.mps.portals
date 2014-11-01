@@ -16,12 +16,12 @@ trait Item {
 }
 
 case class Player(val id : String, val move : Direction) extends Item {
-  def rebuild = new Way
   override def nextMove = move
   def onValidMove = new Player(id, NoMove())
-  def onInvalidMove = new Player(id, NoMove())
-  override def toString = id
+  def onInvalidMove = new Player(id, NoMove())  
+  def rebuild = new Way
   override def getId = id
+  override def toString = id
 }
 
 case class Portal() extends Item {
@@ -38,16 +38,23 @@ case class Wall() extends Item {
   override def toString = "|"
 }
 
-case class Bot() extends Item {
-  def onValidMove = new Bot
-  def onInvalidMove = new Bot
+case class Bot(val move : Direction) extends Item {
+  override def nextMove = move
+  def onValidMove = new Bot(move)
+  def onInvalidMove = new Bot(switchDirection(move))
+  private def switchDirection(actual : Direction) : Direction = actual match {
+    case _ : Left 	=> Right()
+    case _ : Right	=> Up()
+    case _ : Up		=> Down()
+    case _ 		    => Left()
+  }
   def rebuild = new Way
   override def toString = "B"
 }
 
 case class Way() extends Item {
   def onValidMove = new Way
-  def onInvalidMove = new Way
+  def onInvalidMove = new Portal
   def rebuild = new Way
   override def toString = " "
 }

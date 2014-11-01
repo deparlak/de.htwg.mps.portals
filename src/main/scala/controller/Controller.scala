@@ -13,13 +13,13 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	def moveRight(player : String) = playground.setMove(player, Right())
 	
 	//
-	private def move(from : Position, to : Position) : Position = {
+	private def move(from : Position, to : Position) : Unit = {
 	  println("Move " + from + " -> " + to)
 	  playground.move(from, to) match {
-	    case moved : PlayerToWay 	=> notifyObservers(new Update); to
-	    case moved : PlayerToPortal	=> notifyObservers(new GameEnd); to
-	    case moved : BotToWay		=> notifyObservers(new Update); to
-	    case error : InvalidMove  	=> from
+	    case moved : PlayerToWay 	=> notifyObservers(new Update);
+	    case moved : PlayerToPortal	=> notifyObservers(new GameEnd);
+	    case moved : BotToWay		=> notifyObservers(new Update);
+	    case error : InvalidMove  	=> // ignore invalid moves.
 	  }
 	}
 	
@@ -28,7 +28,8 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	  notifyObservers(new NewGame);
 	}
 		
-	Timer(10, true) { 
+	Timer(50, true) {
+	  playground.getMoves.foreach(println)
 	  playground.getMoves.foreach(x => (x._1, x._2.nextMove) match {
 	    case (position : Position, _ : Up) 	  => move(position, position.up)
 	    case (position : Position, _ : Down)  => move(position, position.down)
