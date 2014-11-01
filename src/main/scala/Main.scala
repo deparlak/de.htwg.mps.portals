@@ -2,7 +2,7 @@ package main.scala
 
 import main.scala.controller._
 import main.scala.model._
-import main.scala.view.Tui
+import main.scala.view._
 
 object Portals {
   def main(args: Array[String]) {

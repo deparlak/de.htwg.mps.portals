@@ -12,8 +12,8 @@ import scala.reflect.io.Path
 class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI()
+  val player = "1"
   var level = Path("res") walkFilter { p => p.isFile }
-  var position = new Position(0,0)
   var gameRunning = false
   ui.area.text = "Welcome to Portals. Press enter to start."
 
@@ -27,7 +27,6 @@ class Tui(val controller: Controller) extends Observer[Event] {
   
   def newGame = {
     ui.area.text = controller.playground.toString
-    position = controller.playground.getPlayers.head._1
     gameRunning = true
   }
   
@@ -55,10 +54,10 @@ class Tui(val controller: Controller) extends Observer[Event] {
 	  font = new Font("monospaced", 0, 14)
 	  listenTo(keys)
 	  reactions += {
-	    case KeyPressed(_, Key.Up    , _, _) => if (gameRunning) position = controller.moveUp(position)
-	    case KeyPressed(_, Key.Down  , _, _) => if (gameRunning) position = controller.moveDown(position)
-	    case KeyPressed(_, Key.Left  , _, _) => if (gameRunning) position = controller.moveLeft(position)
-	    case KeyPressed(_, Key.Right , _, _) => if (gameRunning) position = controller.moveRight(position)
+	    case KeyPressed(_, Key.Up    , _, _) => if (gameRunning) controller.moveUp(player)
+	    case KeyPressed(_, Key.Down  , _, _) => if (gameRunning) controller.moveDown(player)
+	    case KeyPressed(_, Key.Left  , _, _) => if (gameRunning) controller.moveLeft(player)
+	    case KeyPressed(_, Key.Right , _, _) => if (gameRunning) controller.moveRight(player)
 	    case KeyPressed(_, Key.Enter , _, _) => if (!gameRunning) nextLevel
 	  }
 	}
