@@ -12,7 +12,7 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	def moveLeft(player : String) = playground.setMove(player, Left())
 	def moveRight(player : String) = playground.setMove(player, Right())
 	
-	//
+	// move the item "from" position "to" another position and notify the observers
 	private def move(from : Position, to : Position) : Unit = {
 	  println("Move " + from + " -> " + to)
 	  playground.move(from, to) match {
@@ -23,13 +23,16 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	  }
 	}
 	
+	// load a new playground
 	def load (file : String) {
 	  playground = playground.load(file)
 	  notifyObservers(new NewGame);
 	}
-		
+	
+	// A timer which code will be executed in the given interval
+	// The method get all items from the playground which should be moved
+	// Items which should be moved can be for example Players or Bots.
 	Timer(50, true) {
-	  playground.getMoves.foreach(println)
 	  playground.getMoves.foreach(x => (x._1, x._2.nextMove) match {
 	    case (position : Position, _ : Up) 	  => move(position, position.up)
 	    case (position : Position, _ : Down)  => move(position, position.down)
