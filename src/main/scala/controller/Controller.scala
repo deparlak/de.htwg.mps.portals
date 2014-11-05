@@ -1,5 +1,6 @@
 package main.scala.controller
 
+import main.scala.util.Timer
 import main.scala.util.Observable
 import main.scala.model._
 
@@ -19,6 +20,7 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	    case moved : PlayerToWay 	=> notifyObservers(new Update);
 	    case moved : PlayerToPortal	=> notifyObservers(new GameEnd);
 	    case moved : BotToWay		=> notifyObservers(new Update);
+	    case moved : BotToPlayer	=> timer.stop; notifyObservers(new GameLost);
 	    case error : InvalidMove  	=> // ignore invalid moves.
 	  }
 	}
@@ -32,7 +34,7 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	// A timer which code will be executed in the given interval
 	// The method get all items from the playground which should be moved
 	// Items which should be moved can be for example Players or Bots.
-	Timer(50, true) {
+	val timer = Timer(50, true) {
 	  playground.getMoves.foreach(x => (x._1, x._2.nextMove) match {
 	    case (position : Position, _ : Up) 	  => move(position, position.up)
 	    case (position : Position, _ : Down)  => move(position, position.down)
@@ -41,16 +43,4 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	    case _							      => println("No Move")
 	  })
 	}
-}
-
-// Timer which calls a anonym method cylic
-object Timer {
-  def apply(interval: Int, repeats: Boolean = true)(op: => Unit) {
-    val timeOut = new javax.swing.AbstractAction() {
-      def actionPerformed(e : java.awt.event.ActionEvent) = op
-    }
-    val t = new javax.swing.Timer(interval, timeOut)
-    t.setRepeats(repeats)
-    t.start()
-  }
 }

@@ -9,3 +9,5 @@ final case class Update() extends Event
 
 final case class NewGame() extends Event
 
+final case class GameLost() extends Event
+

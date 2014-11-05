@@ -19,10 +19,15 @@ class Tui(val controller: Controller) extends Observer[Event] {
 
   def update(e : Event) = {
     e match {
-      case _		: NewGame => newGame
-      case _    	: Update  => updatePlayground
-      case _ 		: GameEnd => gameEnd
+      case _		: NewGame  => newGame
+      case _    	: Update   => updatePlayground
+      case _ 		: GameEnd  => gameEnd
+      case _		: GameLost => gameLost
     }
+  }
+  
+  def gameLost = {
+    ui.area.text = "You lost the game. Hit enter to restart."
   }
   
   def newGame = {
@@ -44,6 +49,8 @@ class Tui(val controller: Controller) extends Observer[Event] {
     
   def nextLevel : Unit = if (level.hasNext) controller.load(level.next.toString) else firstLevel
   
+  def restartLevel : Unit = firstLevel
+  
   class UI extends MainFrame {
     title = "Portals"
 	preferredSize = new Dimension(400, 240)
@@ -58,7 +65,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
 	    case KeyPressed(_, Key.Down  , _, _) => if (gameRunning) controller.moveDown(player)
 	    case KeyPressed(_, Key.Left  , _, _) => if (gameRunning) controller.moveLeft(player)
 	    case KeyPressed(_, Key.Right , _, _) => if (gameRunning) controller.moveRight(player)
-	    case KeyPressed(_, Key.Enter , _, _) => if (!gameRunning) nextLevel
+	    case KeyPressed(_, Key.Enter , _, _) => if (gameRunning) restartLevel else nextLevel
 	  }
 	}
     

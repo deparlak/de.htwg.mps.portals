@@ -9,6 +9,7 @@ sealed trait Move
 final case class PlayerToWay() extends Move
 final case class PlayerToPortal() extends Move
 final case class BotToWay() extends Move
+final case class BotToPlayer() extends Move
 final case class InvalidMove(reason : String) extends Move
 
 
@@ -43,6 +44,8 @@ class Playground(var items : Map[Position, Item]) {
 	    case (player : Player, way : Way) 		=> validMove; 	PlayerToWay()
 	    case (player : Player, portal : Portal) => validMove; 	PlayerToPortal()
 	    case (bot : Bot, way : Way)				=> validMove; 	BotToWay()
+	    case (bot : Bot, player : Player)		=> validMove; 	BotToPlayer()
+	    case (player : Player, bot : Bot)		=> validMove; 	BotToPlayer()
 	    case _ 				 					=> invalidMove; InvalidMove("Invalid Move")
 	  }
 	}
