@@ -18,7 +18,7 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	  println("Move " + from + " -> " + to)
 	  playground.move(from, to) match {
 	    case moved : PlayerToWay 	=> notifyObservers(new Update);
-	    case moved : PlayerToPortal	=> notifyObservers(new GameEnd);
+	    case moved : PlayerToPortal	=> timer.stop; notifyObservers(new GameEnd);
 	    case moved : BotToWay		=> notifyObservers(new Update);
 	    case moved : BotToPlayer	=> timer.stop; notifyObservers(new GameLost);
 	    case error : InvalidMove  	=> // ignore invalid moves.
@@ -27,8 +27,10 @@ class Controller(var playground : Playground) extends Observable[Event] {
 	
 	// load a new playground
 	def load (file : String) {
+	  timer.stop
 	  playground = playground.load(file)
 	  notifyObservers(new NewGame);
+	  timer.start
 	}
 	
 	// A timer which code will be executed in the given interval

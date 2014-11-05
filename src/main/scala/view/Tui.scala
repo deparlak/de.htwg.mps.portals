@@ -28,6 +28,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
   
   def gameLost = {
     ui.area.text = "You lost the game. Hit enter to restart."
+    gameRunning = false
   }
   
   def newGame = {
