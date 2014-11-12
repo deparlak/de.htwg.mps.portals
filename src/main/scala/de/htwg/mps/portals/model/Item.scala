@@ -1,4 +1,4 @@
-package main.scala.model
+package de.htwg.mps.portals.model
 
 sealed trait Direction
 final case class Left() extends Direction

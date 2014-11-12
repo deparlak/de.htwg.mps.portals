@@ -1,4 +1,4 @@
-package main.scala.util
+package de.htwg.mps.portals.util
 
 trait Ordered[A] {
   def compare(that : A) : Int

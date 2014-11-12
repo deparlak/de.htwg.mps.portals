@@ -1,6 +1,6 @@
-package main.scala.model
+package de.htwg.mps.portals.model
 
-import main.scala.util.Ordered
+import de.htwg.mps.portals.util.Ordered
 
 class Position(val x : Int, val y : Int) extends Ordered[Position] {
     override def hashCode = 41 * (41 + x) + y

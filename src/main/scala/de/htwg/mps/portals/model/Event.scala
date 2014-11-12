@@ -1,4 +1,4 @@
-package main.scala.model
+package de.htwg.mps.portals.model
 
 // Events which could occur on the playground, after moving an Item
 sealed trait Event

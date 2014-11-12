@@ -1,4 +1,6 @@
-package main.scala.util
+package de.htwg.mps.portals.util
+
+import scala.Vector
 
 trait Observer[Event] {
   def update(e : Event)
