@@ -17,3 +17,8 @@ libraryDependencies ++= Seq(
 EclipseKeys.withSource := true
 
 EclipseKeys.withJavadoc := true
+
+// no folders for src/main/java and src/test/java
+unmanagedSourceDirectories in Compile := (scalaSource in Compile).value :: Nil
+
+unmanagedSourceDirectories in Test := (scalaSource in Test).value :: Nil
