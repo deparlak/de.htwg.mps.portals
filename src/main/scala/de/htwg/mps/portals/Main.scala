@@ -8,8 +8,7 @@ import de.htwg.mps.portals.view.Tui
 
 object Portals {
   def main(args: Array[String]) {
-    var items: Map[Position, Item] = Map()
-    val playground = new Playground(items)
+    val playground = new Playground()
     val tui = new Tui(new Controller(playground))
   }
 }

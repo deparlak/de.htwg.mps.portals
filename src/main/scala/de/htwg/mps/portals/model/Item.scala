@@ -19,23 +19,9 @@ case class Player(val id : String, val move : Direction) extends Item {
   override def nextMove = move
   def onValidMove = new Player(id, NoMove())
   def onInvalidMove = new Player(id, NoMove())  
-  def rebuild = new Way
+  def rebuild = this
   override def getId = id
   override def toString = id
-}
-
-case class Portal() extends Item {
-  def onValidMove = new Portal
-  def onInvalidMove = new Portal
-  def rebuild = new Way
-  override def toString = "P"
-}
-
-case class Wall() extends Item {
-  def onValidMove = new Wall
-  def onInvalidMove = new Wall
-  def rebuild = new Wall
-  override def toString = "|"
 }
 
 case class Bot(val move : Direction, val lastValid : Direction = NoMove(), val lastInvalid : Direction = NoMove()) extends Item {
@@ -61,13 +47,6 @@ case class Bot(val move : Direction, val lastValid : Direction = NoMove(), val l
     case (NoMove(), Down()) 	=> NoMove()
     case (NoMove(), NoMove()) 	=> Up()
   }
-  def rebuild = new Way
+  def rebuild = this
   override def toString = "B"
-}
-
-case class Way() extends Item {
-  def onValidMove = new Way
-  def onInvalidMove = new Portal
-  def rebuild = new Way
-  override def toString = " "
 }
