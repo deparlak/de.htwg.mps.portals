@@ -11,11 +11,18 @@ final case class BotToWay() extends Move
 final case class BotToPlayer() extends Move
 final case class InvalidMove(reason: String) extends Move
 
-class Playground(var terrain: Map[Position, Terrain] = Map()) {
+class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[Position, Player] = Map()) {
   
-  // move the item "from" position "to" another position
-  def move(from: Position, to: Position) : Unit = {
-
+  def setMove(uuid : String, direction : Direction) : Playground = {
+    val player = this.player.map{
+      case (position, player) => if (uuid == player.uuid) (position, player.switchDirection(direction)) else (position, player) 
+    }
+    new Playground (terrain, player)
+  }
+  
+  // move the following player
+  def move(player : String) : Playground = {
+    new Playground
   }
 
   // the complete playground as a formated string

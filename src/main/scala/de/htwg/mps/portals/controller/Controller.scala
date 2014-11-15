@@ -6,13 +6,13 @@ import de.htwg.mps.portals.util.Observable
 import de.htwg.mps.portals.util.Timer
 
 class Controller(var playground: Playground) extends Observable[Event] {
-  // move a item with the specified id. The item will not be move directly. Otherwise
+  // move a item with the specified uuid. The item will not be move directly. Otherwise
   // the direction will be set to which we like to move and a cyclic method will do
   // the move after a specified timeout
-  def moveUp(player: String) = ""
-  def moveDown(player: String) = ""
-  def moveLeft(player: String) = ""
-  def moveRight(player: String) = ""
+  def moveUp(uuid : String) = playground = playground.setMove(uuid, Up);
+  def moveDown(uuid : String) = playground = playground.setMove(uuid, Down);
+  def moveLeft(uuid : String) = playground = playground.setMove(uuid, Left);
+  def moveRight(uuid : String) = playground = playground.setMove(uuid, Right);
 
   // move the item "from" position "to" another position and notify the observers
   private def move(from: Position, to: Position): Unit = {
@@ -31,6 +31,6 @@ class Controller(var playground: Playground) extends Observable[Event] {
   // The method get all items from the playground which should be moved
   // Items which should be moved can be for example Players or Bots.
   val timer = Timer(50, true) {
-
+    
   }
 }
