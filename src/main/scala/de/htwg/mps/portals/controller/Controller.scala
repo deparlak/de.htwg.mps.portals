@@ -6,10 +6,10 @@ import de.htwg.mps.portals.util.Timer
 
 // Events which could be fired by the controller
 sealed trait Event
-final case class GameEnd() extends Event
-final case class Update() extends Event
-final case class NewGame() extends Event
+final case class Update(move : Move) extends Event
 final case class GameLost() extends Event
+final case class GameWon() extends Event
+final case class NewGame() extends Event
 
 
 class Controller(var playground: Playground) extends Observable[Event] {
@@ -23,8 +23,12 @@ class Controller(var playground: Playground) extends Observable[Event] {
 
   // move the item "from" position "to" another position and notify the observers
   private def move(player : Player): Unit = {
-	notifyObservers(new Update);
-	playground = playground.move(player)._2 
+	//notifyObservers(new Update);
+	playground.move(player) match {
+	  case (m : InvalidMove, p : Playground) => playground = p;
+	  case (m : Moved, p : Playground)		 => playground = p; notifyObservers(Update(m))
+	  case (m : Destroyed, p : Playground)	 => playground = p; notifyObservers(GameLost())
+	}
   }
 
   // load a new playground

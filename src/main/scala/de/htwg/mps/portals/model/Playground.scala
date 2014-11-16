@@ -5,9 +5,9 @@ import scala.io.Source._
 // Possible moves.
 sealed trait Move
 
-final case object InvalidMove extends Move
-final case object Moved extends Move
-final case object Destroyed extends Move
+final case class InvalidMove(reason : String = "") extends Move
+final case class Moved(player : Player, terrain : Terrain) extends Move
+final case class Destroyed(player : Player, destroyed : Player) extends Move
 
 class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[Position, Player] = Map()) {
   // set the move direction for a player
@@ -25,44 +25,44 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
     // check for valid positions
     (player.get(from), player.get(to), terrain.get(to)) match {
       // player is on a position which does not exist
-      case (None, _, _)			=> (InvalidMove, this)
+      case (None, _, _)			=> (InvalidMove("From invalid position"), this)
       // position to which to move does not exist on the terrain
-      case (_, _, None)			=> (InvalidMove, this)
+      case (_, _, None)			=> (InvalidMove("To invalid position"), this)
       // position exist and no other player is on the position
       case (p1, None, terrain)  => moveCheck(p1.get, terrain.get)
       // another player is already on the position to which to move
-      case (p1, p2, _) 			=> collisionMove(p1.get, p2.get)
+      case (p1, p2, terrain) 	=> collisionMove(p1.get, p2.get, terrain.get)
     }
   }
 
   // we have a collision move
   // This mean a player like to move to a place where another player is already
-  private def collisionMove(from : Player, to : Player) : (Move, Playground) = {
-    if (from.destroy(to)) validCollision(from) else invalidMove(from)
+  private def collisionMove(from : Player, to : Player, t : Terrain) : (Move, Playground) = {
+    if (from.destroy(to)) validCollision(from, to, t) else invalidMove(from)
   }
   
   // a valid collision, which remove the collosioned Player
-  private def validCollision(p : Player) : (Move, Playground) = {
-    val updatedPlayer = player - p.position - p.nextPosition + (p.nextPosition -> p.validMove)
-    (Destroyed, new Playground(terrain, updatedPlayer))
+  private def validCollision(from : Player, to : Player, t : Terrain) : (Move, Playground) = {
+    val updatedPlayer = player - from.position - to.position + (from.nextPosition -> from.validMove)
+    (Destroyed(from , to), new Playground(terrain, updatedPlayer))
   }
   
-  // a valid move which update the player with the new position
+  // an invalid move which update the player with the new position
   private def invalidMove(p : Player) : (Move, Playground) = {
     val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
-    (InvalidMove, new Playground(terrain, updatedPlayer))
+    (InvalidMove(), new Playground(terrain, updatedPlayer))
   }
   
   // a invalid move which update the player with a new direction to move
-  private def validMove(p : Player) : (Move, Playground) = {
+  private def validMove(p : Player, t : Terrain) : (Move, Playground) = {
     val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
-    (Moved, new Playground(terrain, updatedPlayer))
+    (Moved(p, t), new Playground(terrain, updatedPlayer))
   }
   
   // check if it is a valid move
   private def moveCheck(p : Player, t : Terrain)  : (Move, Playground) = {
     // is the terrain walkable by the player?
-    if (t.walkableBy(p)) validMove(p) else invalidMove(p)
+    if (t.walkableBy(p)) validMove(p, t) else invalidMove(p)
   }
 
   // the complete playground as a formated string

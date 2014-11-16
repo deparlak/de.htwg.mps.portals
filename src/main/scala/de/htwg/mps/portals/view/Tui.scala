@@ -20,9 +20,9 @@ class Tui(val controller: Controller) extends Observer[Event] {
 
   def update(e: Event) = {
     e match {
-      case _: NewGame => newGame
-      case _: Update => updatePlayground
-      case _: GameEnd => gameEnd
+      case _: NewGame  => newGame
+      case _: Update   => updatePlayground
+      case _: GameWon  => gameWon
       case _: GameLost => gameLost
     }
   }
@@ -39,8 +39,8 @@ class Tui(val controller: Controller) extends Observer[Event] {
 
   def updatePlayground = if (gameRunning) ui.area.text = controller.playground.toString
 
-  def gameEnd = {
-    ui.area.text = "Game End. Press enter for the next level."
+  def gameWon = {
+    ui.area.text = "You won the game. Press enter for the next level."
     gameRunning = false
   }
 
