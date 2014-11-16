@@ -25,8 +25,10 @@ trait Player {
 
 // companion object to get Terrain instances, like a factory method.
 object Player {
+  def HumanPlayer1 = "1"
+  
   def apply(char : Char, position : Position) : Option[Player] = char match {
-    case '1' => Some(Human("1", position, Stay))
+    case '1' => Some(Human(HumanPlayer1, position, Stay))
     case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Stay))
     case _	 => None
   }

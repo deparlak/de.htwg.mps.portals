@@ -13,7 +13,7 @@ import de.htwg.mps.portals.controller._
 class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI()
-  val player = "1"
+  var player = Player.HumanPlayer1
   var level = Path("res") walkFilter { p => p.isFile }
   var gameRunning = false
   ui.area.text = "Welcome to Portals. Press enter to start."
