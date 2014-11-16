@@ -3,15 +3,12 @@ package de.htwg.mps.portals.view
 import scala.swing._
 import scala.swing.event._
 import de.htwg.mps.portals.util.Observer
-import de.htwg.mps.portals.controller.Controller
-import de.htwg.mps.portals.model.Event
 import de.htwg.mps.portals.model._
 import scala.collection.JavaConversions._
 import scala.reflect.io.Path
-import de.htwg.mps.portals.model.Update
-import de.htwg.mps.portals.model.NewGame
-import de.htwg.mps.portals.model.GameLost
-import de.htwg.mps.portals.model.GameEnd
+import de.htwg.mps.portals.controller.Event
+import de.htwg.mps.portals.controller._
+
 
 class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)

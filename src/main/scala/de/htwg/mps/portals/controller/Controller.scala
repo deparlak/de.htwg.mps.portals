@@ -1,9 +1,16 @@
 package de.htwg.mps.portals.controller
 
 import de.htwg.mps.portals.model._
-import de.htwg.mps.portals.model.Update
 import de.htwg.mps.portals.util.Observable
 import de.htwg.mps.portals.util.Timer
+
+// Events which could be fired by the controller
+sealed trait Event
+final case class GameEnd() extends Event
+final case class Update() extends Event
+final case class NewGame() extends Event
+final case class GameLost() extends Event
+
 
 class Controller(var playground: Playground) extends Observable[Event] {
   // move a player with the specified uuid. The player will not be move directly. Otherwise

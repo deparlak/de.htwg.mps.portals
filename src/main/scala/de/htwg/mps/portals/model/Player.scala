@@ -38,8 +38,8 @@ case class Human(
     override val direction : Direction) extends Player {
   override def toString = "1"
   def switchDirection(direction : Direction) = new Human(uuid, position, direction)
-  def validMove = new Human(uuid, nextPosition, direction)
-  def invalidMove = new Human(uuid, position, direction)
+  def validMove = new Human(uuid, nextPosition, Stay)
+  def invalidMove = new Human(uuid, position, Stay)
 }
 
 case class Bot(override val uuid : String,
