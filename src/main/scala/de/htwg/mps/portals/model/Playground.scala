@@ -62,13 +62,7 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   // check if it is a valid move
   private def moveCheck(p : Player, t : Terrain)  : (Move, Playground) = {
     // is the terrain walkable by the player?
-    if (t.walkableBy(p)) {
-      val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
-      (Moved, new Playground(terrain, updatedPlayer))
-    } else {
-      val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
-      (InvalidMove, new Playground(terrain, updatedPlayer))
-    }
+    if (t.walkableBy(p)) validMove(p) else invalidMove(p)
   }
 
   // the complete playground as a formated string
