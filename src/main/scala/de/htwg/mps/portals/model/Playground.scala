@@ -38,12 +38,12 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   // we have a collision move
   // This mean a player like to move to a place where another player is already
   private def collisionMove(from : Player, to : Player) : (Move, Playground) = {
-    if (from.destroy(to)) validCollision(from, to) else invalidMove(from)
+    if (from.destroy(to)) validCollision(from) else invalidMove(from)
   }
   
   // a valid collision, which remove the collosioned Player
-  private def validCollision(from : Player, to : Player) : (Move, Playground) = {
-    val updatedPlayer = player - to.position - from.position + (from.nextPosition -> from.validMove)
+  private def validCollision(p : Player) : (Move, Playground) = {
+    val updatedPlayer = player - p.position - p.nextPosition + (p.nextPosition -> p.validMove)
     (Destroyed, new Playground(terrain, updatedPlayer))
   }
   

@@ -22,8 +22,9 @@ class Controller(var playground: Playground) extends Observable[Event] {
   def moveRight(uuid : String) = playground = playground.setMove(uuid, Right);
 
   // move the item "from" position "to" another position and notify the observers
-  private def move(from: Position, to: Position): Unit = {
-    println("Move " + from + " -> " + to)
+  private def move(player : Player): Unit = {
+	notifyObservers(new Update);
+	playground = playground.move(player)._2 
   }
 
   // load a new playground
@@ -38,12 +39,8 @@ class Controller(var playground: Playground) extends Observable[Event] {
   // The method get all items from the playground which should be moved
   // Items which should be moved can be for example Players or Bots.
   val timer = Timer(50, true) {
-    playground.player.foreach{
-      	case (position, player) => {
-      		notifyObservers(new Update);
-      		println(player)
-      		playground = playground.move(player)._2 
-      	}
-      }
+    playground.player.foreach{ 
+      case (position, player) => { move(player) } 
+    }
   }
 }
