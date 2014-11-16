@@ -32,7 +32,10 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
     val sorted = terrain.toSeq.sortWith(_._1 < _._1)
     sorted.foreach(x => {
       if (x._1.y > y) { y += 1; str += "\n" }
-      str += x._2
+      player.get(x._1) match {
+      	case Some(player) 	=> str += player.toString
+      	case None	 		=> str += x._2
+      }
     })
     str
   }
@@ -41,7 +44,8 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   def load(file: String): Playground = {
     val source = fromFile(file)
     val arr = source.map(_.toChar).toArray
-    var terrain: Map[Position, Terrain] = Map()
+    var terrain : Map[Position, Terrain] = Map()
+    var player : Map[Position, Player] = Map()  
     var x = 0
     var y = 0
 
@@ -49,9 +53,16 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
       input match {
         case '\n' => x = 0; y += 1
         case '\r' => None
-        case _ => terrain += (new Position(x, y) -> Terrain(input)); x += 1
+        case _ 	  => {
+          terrain += (new Position(x, y) -> Terrain(input))
+          Player(input) match {
+            case (Some(newPlayer)) => player += (new Position(x, y) -> newPlayer)
+            case _				   => None
+          }
+          x += 1
+        }
       })
     source.close()
-    new Playground(terrain)
+    new Playground(terrain, player)
   }
 }
