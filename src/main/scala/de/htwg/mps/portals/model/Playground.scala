@@ -6,7 +6,8 @@ import scala.io.Source._
 sealed trait Move
 
 final case object InvalidMove extends Move
-final case object ValidMove extends Move
+final case object Moved extends Move
+final case object Destroyed extends Move
 
 class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[Position, Player] = Map()) {
   // set the move direction for a player
@@ -37,12 +38,25 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   // we have a collision move
   // This mean a player like to move to a place where another player is already
   private def collisionMove(from : Player, to : Player) : (Move, Playground) = {
-    if (from.eat(to)) invalidMove(from) else invalidMove(from)
+    if (from.destroy(to)) validCollision(from, to) else invalidMove(from)
   }
   
+  // a valid collision, which remove the collosioned Player
+  private def validCollision(from : Player, to : Player) : (Move, Playground) = {
+    val updatedPlayer = player - to.position - from.position + (from.nextPosition -> from.validMove)
+    (Destroyed, new Playground(terrain, updatedPlayer))
+  }
+  
+  // a valid move which update the player with the new position
   private def invalidMove(p : Player) : (Move, Playground) = {
     val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
     (InvalidMove, new Playground(terrain, updatedPlayer))
+  }
+  
+  // a invalid move which update the player with a new direction to move
+  private def validMove(p : Player) : (Move, Playground) = {
+    val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
+    (Moved, new Playground(terrain, updatedPlayer))
   }
   
   // check if it is a valid move
@@ -50,7 +64,7 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
     // is the terrain walkable by the player?
     if (t.walkableBy(p)) {
       val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
-      (ValidMove, new Playground(terrain, updatedPlayer))
+      (Moved, new Playground(terrain, updatedPlayer))
     } else {
       val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
       (InvalidMove, new Playground(terrain, updatedPlayer))

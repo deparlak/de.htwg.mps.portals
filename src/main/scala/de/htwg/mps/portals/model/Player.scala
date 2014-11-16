@@ -21,7 +21,7 @@ sealed trait Player {
   }
   def validMove : Player
   def invalidMove : Player
-  def eat(player : Player) = false
+  def destroy(player : Player) = false
 }
 
 // companion object to get Terrain instances, like a factory method.
@@ -50,7 +50,7 @@ case class Bot(override val uuid : String,
     override val direction : Direction,
     val lastValid : Direction) extends Player {
   override def toString = "B"
-  override def eat(player : Player) = player match {
+  override def destroy(player : Player) = player match {
     case (player : Human) => true
     case (bot : Bot)	  => false
   }
