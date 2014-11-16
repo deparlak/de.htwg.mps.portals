@@ -19,12 +19,14 @@ trait Player {
     case Right 	=> position.right
     case Stay   => position
   }
+  def validMove : Player
+  def invalidMove : Player
 }
 
 // companion object to get Terrain instances, like a factory method.
 object Player {
   def apply(char : Char, position : Position) : Option[Player] = char match {
-    case '1' => Some(Human(java.util.UUID.randomUUID.toString, position, Right))
+    case '1' => Some(Human("1", position, Stay))
     case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Stay))
     case _	 => None
   }
@@ -36,6 +38,8 @@ case class Human(
     override val direction : Direction) extends Player {
   override def toString = "1"
   def switchDirection(direction : Direction) = new Human(uuid, position, direction)
+  def validMove = new Human(uuid, nextPosition, direction)
+  def invalidMove = new Human(uuid, position, direction)
 }
 
 case class Bot(override val uuid : String,
@@ -43,4 +47,6 @@ case class Bot(override val uuid : String,
     override val direction : Direction) extends Player {
   override def toString = "B"
   def switchDirection(direction : Direction) = new Human(uuid, position, direction)
+  def validMove = new Bot(uuid, nextPosition, direction)
+  def invalidMove = new Bot(uuid, position, direction)
 }
