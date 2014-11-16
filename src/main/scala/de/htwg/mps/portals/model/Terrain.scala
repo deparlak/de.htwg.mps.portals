@@ -21,10 +21,7 @@ object Terrain {
 
 case object Grass extends Terrain {
   override def toString = " "
-  override def walkableBy(player : Player) = player match {
-    case _ : Human => true
-    case _		   => false
-  }
+  override def walkableBy(player : Player) = true
 }
 
 case object Fire extends Terrain {

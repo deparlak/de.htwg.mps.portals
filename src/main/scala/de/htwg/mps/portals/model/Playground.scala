@@ -50,7 +50,8 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
       val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
       (ValidMove, new Playground(terrain, updatedPlayer))
     } else {
-      (InvalidMove, this)
+      val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
+      (InvalidMove, new Playground(terrain, updatedPlayer))
     }
   }
 

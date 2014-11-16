@@ -29,7 +29,7 @@ object Player {
   
   def apply(char : Char, position : Position) : Option[Player] = char match {
     case '1' => Some(Human(HumanPlayer1, position, Stay))
-    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Stay))
+    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Up, Stay))
     case _	 => None
   }
 }
@@ -46,9 +46,29 @@ case class Human(
 
 case class Bot(override val uuid : String,
     override val position : Position,
-    override val direction : Direction) extends Player {
+    override val direction : Direction,
+    val lastValid : Direction) extends Player {
   override def toString = "B"
   def switchDirection(direction : Direction) = new Human(uuid, position, direction)
-  def validMove = new Bot(uuid, nextPosition, direction)
-  def invalidMove = new Bot(uuid, position, direction)
+  def validMove = new Bot(uuid, nextPosition, direction, direction)
+  def invalidMove = new Bot(uuid, position, switchDirection(lastValid, direction), direction)
+  private def switchDirection(lastValid : Direction, lastInvalid : Direction) : Direction = (lastValid, lastInvalid) match {
+    case (Up, Up) 		=> Left
+    case (Up, Left) 	=> Right
+    case (Up, _) 		=> Down
+    case (Down, Down) 	=> Left
+    case (Down, Left) 	=> Right
+    case (Down, _) 	    => Up
+    case (Left, Left) 	=> Up
+    case (Left, Up) 	=> Down
+    case (Left, _) 	    => Right
+    case (Right, Right) => Up
+    case (Right, Up) 	=> Down
+    case (Right, _) 	=> Left
+    case (Stay, Up) 	=> println("hier"); Left
+    case (Stay, Left) 	=> Right
+    case (Stay, Right)	=> Down
+    case (Stay, Down) 	=> Up
+    case (Stay, Stay) 	=> Up
+  }
 }
