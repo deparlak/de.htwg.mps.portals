@@ -5,14 +5,11 @@ import scala.io.Source._
 // Possible moves.
 sealed trait Move
 
-final case class PlayerToWay() extends Move
-final case class PlayerToPortal() extends Move
-final case class BotToWay() extends Move
-final case class BotToPlayer() extends Move
-final case class InvalidMove(reason: String) extends Move
+final case object InvalidMove extends Move
+final case object ValidMove extends Move
 
 class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[Position, Player] = Map()) {
-  
+  // set the move direction for a player
   def setMove(uuid : String, direction : Direction) : Playground = {
     val player = this.player.map{
       case (position, player) => if (uuid == player.uuid) (position, player.switchDirection(direction)) else (position, player) 
@@ -21,8 +18,42 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   }
   
   // move the following player
-  def move(player : String) : Playground = {
-    new Playground
+  def move(movePlayer : Player) : (Move, Playground) = {
+    val from = movePlayer.position
+    val to = movePlayer.nextPosition
+    // check for valid positions
+    (player.get(from), player.get(to), terrain.get(to)) match {
+      // player is on a position which does not exist
+      case (None, _, _)			=> (InvalidMove, this)
+      // position to which to move does not exist on the terrain
+      case (_, _, None)			=> (InvalidMove, this)
+      // position exist and no other player is on the position
+      case (p1, None, terrain)  => moveCheck(p1.get, terrain.get)
+      // another player is already on the position to which to move
+      case (p1, p2, _) 			=> collisionMove(p1.get, p2.get)
+    }
+  }
+
+  // we have a collision move
+  // This mean a player like to move to a place where another player is already
+  private def collisionMove(from : Player, to : Player) : (Move, Playground) = {
+    (from, to) match {
+      // Only a valid move if a Bot move to a Human
+      case (_ : Bot, _ : Human) => (InvalidMove, this)
+      // other moves are invalid
+      case _					=> (InvalidMove, this)
+    }
+  }
+  
+  // check if it is a valid move
+  private def moveCheck(player : Player, terrain : Terrain)  : (Move, Playground) = {
+    // is the terrain walkable by the player?
+    if (terrain.walkableBy(player)) {
+      println("walkable")
+      (InvalidMove, this)
+    } else {
+      (InvalidMove, this)
+    }
   }
 
   // the complete playground as a formated string
@@ -54,9 +85,10 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
         case '\n' => x = 0; y += 1
         case '\r' => None
         case _ 	  => {
-          terrain += (new Position(x, y) -> Terrain(input))
-          Player(input) match {
-            case (Some(newPlayer)) => player += (new Position(x, y) -> newPlayer)
+          val position = new Position(x, y)
+          terrain += (position -> Terrain(input))
+          Player(input, position) match {
+            case (Some(newPlayer)) => player += (position -> newPlayer)
             case _				   => None
           }
           x += 1

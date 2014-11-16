@@ -21,20 +21,33 @@ object Terrain {
 
 case object Grass extends Terrain {
   override def toString = " "
+  override def walkableBy(player : Player) = player match {
+    case _ : Human => true
+    case _		   => false
+  }
 }
 
 case object Fire extends Terrain {
-  override def toString = "X"  
+  override def toString = "X"
+  override def walkableBy(player : Player) = player match {
+    case _ : Human => true
+    case _		   => false
+  }
 }
 
 case object Swamp extends Terrain {
-  override def toString = "."  
+  override def toString = "." 
+  override def walkableBy(player : Player) = true
 }
 
 case object Wall extends Terrain {
-    override def toString = "|"
+  override def toString = "|"
 }
 
 case object Portal extends Terrain {
-    override def toString = "P"
+  override def toString = "P"
+  override def walkableBy(player : Player) = player match {
+    case _ : Human => true
+    case _		   => false
+  }
 }

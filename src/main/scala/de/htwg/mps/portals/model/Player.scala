@@ -9,25 +9,38 @@ final case object Stay extends Direction
 
 trait Player {
   def uuid : String = null
+  def position : Position
   def direction : Direction
   def switchDirection(direction : Direction) : Player
+  def nextPosition : Position = direction match {    
+    case Up 	=> position.up
+    case Down	=> position.down
+    case Left 	=> position.left
+    case Right 	=> position.right
+    case Stay   => position
+  }
 }
 
 // companion object to get Terrain instances, like a factory method.
 object Player {
-  def apply(char : Char) : Option[Player] = char match {
-    case '1' => Some(Human(java.util.UUID.randomUUID.toString, Stay))
-    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, Stay))
+  def apply(char : Char, position : Position) : Option[Player] = char match {
+    case '1' => Some(Human(java.util.UUID.randomUUID.toString, position, Right))
+    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Stay))
     case _	 => None
   }
 }
 
-case class Human(override val uuid : String, override val direction : Direction) extends Player {
+case class Human(
+    override val uuid : String, 
+    override val position : Position,
+    override val direction : Direction) extends Player {
   override def toString = "1"
-  def switchDirection(direction : Direction) = new Human(uuid, direction)
+  def switchDirection(direction : Direction) = new Human(uuid, position, direction)
 }
 
-case class Bot(override val uuid : String, override val direction : Direction) extends Player {
+case class Bot(override val uuid : String,
+    override val position : Position,
+    override val direction : Direction) extends Player {
   override def toString = "B"
-  def switchDirection(direction : Direction) = new Human(uuid, direction)
+  def switchDirection(direction : Direction) = new Human(uuid, position, direction)
 }
