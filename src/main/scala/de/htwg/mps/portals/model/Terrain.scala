@@ -1,6 +1,6 @@
 package de.htwg.mps.portals.model
 
-trait Terrain {
+sealed trait Terrain {
   def walkableBy(player : Player) = false
   def liveDecrease = 0
   def movementCost = 0

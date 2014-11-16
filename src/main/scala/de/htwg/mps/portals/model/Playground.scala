@@ -36,11 +36,13 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
 
   // we have a collision move
   // This mean a player like to move to a place where another player is already
-  private def collisionMove(from : Player, to : Player) : (Move, Playground) = (from, to) match {
-    // Only a valid move if a Bot move to a Human
-    case (_ : Bot, _ : Human) => (InvalidMove, this)
-    // other moves are invalid
-    case _					  => (InvalidMove, this)
+  private def collisionMove(from : Player, to : Player) : (Move, Playground) = {
+    if (from.eat(to)) invalidMove(from) else invalidMove(from)
+  }
+  
+  private def invalidMove(p : Player) : (Move, Playground) = {
+    val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
+    (InvalidMove, new Playground(terrain, updatedPlayer))
   }
   
   // check if it is a valid move
