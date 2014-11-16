@@ -26,9 +26,18 @@ class Controller(var playground: Playground) extends Observable[Event] {
 	//notifyObservers(new Update);
 	playground.move(player) match {
 	  case (m : InvalidMove, p : Playground) => playground = p;
-	  case (m : Moved, p : Playground)		 => playground = p; notifyObservers(Update(m))
-	  case (m : Destroyed, p : Playground)	 => playground = p; notifyObservers(GameLost())
+	  case (m : Moved, p : Playground)		 => playground = p; onMoved(m)
+	  case (m : Destroyed, p : Playground)	 => playground = p; onDestroyed(m)
 	}
+  }
+  
+  private def onDestroyed(destroyed : Destroyed) {
+    notifyObservers(GameLost())
+  }
+  
+  private def onMoved(move : Moved) {
+    notifyObservers(Update(move))
+    if (move.terrain.endGame) notifyObservers(GameWon())
   }
 
   // load a new playground

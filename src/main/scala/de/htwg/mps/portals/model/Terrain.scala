@@ -2,6 +2,7 @@ package de.htwg.mps.portals.model
 
 sealed trait Terrain {
   def walkableBy(player : Player) = false
+  def endGame = false
   def liveDecrease = 0
   def movementCost = 0
   def toString : String
@@ -47,4 +48,5 @@ case object Portal extends Terrain {
     case _ : Human => true
     case _		   => false
   }
+  override def endGame = true
 }
