@@ -38,7 +38,10 @@ class Controller(var playground: Playground) extends Observable[Event] {
   
   private def onMoved(move : Moved) {
     notifyObservers(Update(move))
-    if (move.terrain.endGame) notifyObservers(GameWon())
+    if (move.terrain.endGame) {
+      timer.stop
+      notifyObservers(GameWon())
+    }
   }
 
   // load a new playground
@@ -54,7 +57,7 @@ class Controller(var playground: Playground) extends Observable[Event] {
   // Items which should be moved can be for example Players or Bots.
   val timer = Timer(50, true) {
     playground.player.foreach{ 
-      case (position, player) => { move(player) } 
+      case (position, player) => { if (player.direction != Stay) move(player) } 
     }
   }
 }
