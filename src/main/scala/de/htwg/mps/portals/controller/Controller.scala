@@ -32,6 +32,7 @@ class Controller(var playground: Playground) extends Observable[Event] {
   }
   
   private def onDestroyed(destroyed : Destroyed) {
+    timer.stop
     notifyObservers(GameLost())
   }
   

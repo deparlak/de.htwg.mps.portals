@@ -15,7 +15,9 @@ class Tui(val controller: Controller) extends Observer[Event] {
   val ui = new UI()
   var player = Player.HumanPlayer1
   var level = Path("res") walkFilter { p => p.isFile }
+  var currentLevel = ""
   var gameRunning = false
+  var gameWasWon = true
   ui.area.text = "Welcome to Portals. Press enter to start."
 
   def update(e: Event) = {
@@ -35,6 +37,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
   def newGame = {
     ui.area.text = controller.playground.toString
     gameRunning = true
+    gameWasWon = false
   }
 
   def updatePlayground = if (gameRunning) ui.area.text = controller.playground.toString
@@ -42,6 +45,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
   def gameWon = {
     ui.area.text = "You won the game. Press enter for the next level."
     gameRunning = false
+    gameWasWon = true
   }
 
   def firstLevel: Unit = {
@@ -49,9 +53,14 @@ class Tui(val controller: Controller) extends Observer[Event] {
     if (level.hasNext) nextLevel
   }
 
-  def nextLevel: Unit = if (level.hasNext) controller.load(level.next.toString) else firstLevel
+  def nextLevel: Unit = if (level.hasNext) {
+    currentLevel = level.next.toString
+    controller.load(currentLevel) 
+  } else {
+    firstLevel
+  }
 
-  def restartLevel: Unit = firstLevel
+  def restartLevel: Unit = controller.load(currentLevel)
 
   class UI extends MainFrame {
     title = "Portals"
@@ -63,11 +72,11 @@ class Tui(val controller: Controller) extends Observer[Event] {
       font = new Font("monospaced", 0, 14)
       listenTo(keys)
       reactions += {
-        case KeyPressed(_, Key.Up, _, _) => if (gameRunning) controller.moveUp(player)
-        case KeyPressed(_, Key.Down, _, _) => if (gameRunning) controller.moveDown(player)
-        case KeyPressed(_, Key.Left, _, _) => if (gameRunning) controller.moveLeft(player)
+        case KeyPressed(_, Key.Up, _, _) 	=> if (gameRunning) controller.moveUp(player)
+        case KeyPressed(_, Key.Down, _, _) 	=> if (gameRunning) controller.moveDown(player)
+        case KeyPressed(_, Key.Left, _, _) 	=> if (gameRunning) controller.moveLeft(player)
         case KeyPressed(_, Key.Right, _, _) => if (gameRunning) controller.moveRight(player)
-        case KeyPressed(_, Key.Enter, _, _) => if (gameRunning) restartLevel else nextLevel
+        case KeyPressed(_, Key.Enter, _, _) => if (gameWasWon) nextLevel else restartLevel
       }
     }
 
