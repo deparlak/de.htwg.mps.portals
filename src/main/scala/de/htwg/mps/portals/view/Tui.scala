@@ -2,10 +2,9 @@ package de.htwg.mps.portals.view
 
 import scala.swing._
 import scala.swing.event._
-import de.htwg.mps.portals.util.Observer
-import de.htwg.mps.portals.model._
-import scala.collection.JavaConversions._
 import scala.reflect.io.Path
+import de.htwg.mps.portals.util.Observer
+import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.controller.Event
 import de.htwg.mps.portals.controller._
 
