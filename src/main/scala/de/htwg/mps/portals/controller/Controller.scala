@@ -6,7 +6,8 @@ import de.htwg.mps.portals.util.Timer
 
 // Events which could be fired by the controller
 sealed trait Event
-final case class Update(move : Move) extends Event
+final case class Update(move : Moved) extends Event
+final case class Wait(move : PayMovement) extends Event
 final case class GameLost() extends Event
 final case class GameWon() extends Event
 final case class NewGame() extends Event
@@ -27,6 +28,7 @@ class Controller(var playground: Playground) extends Observable[Event] {
 	playground.move(player) match {
 	  case (m : InvalidMove, p : Playground) => playground = p;
 	  case (m : Moved, p : Playground)		 => playground = p; onMoved(m)
+	  case (m : PayMovement, p : Playground) => playground = p; onPayMovement(m)
 	  case (m : Destroyed, p : Playground)	 => playground = p; onDestroyed(m)
 	}
   }
@@ -34,6 +36,10 @@ class Controller(var playground: Playground) extends Observable[Event] {
   private def onDestroyed(destroyed : Destroyed) {
     timer.stop
     notifyObservers(GameLost())
+  }
+  
+  private def onPayMovement(payMovement : PayMovement) {
+    notifyObservers(Wait(payMovement))
   }
   
   private def onMoved(move : Moved) {

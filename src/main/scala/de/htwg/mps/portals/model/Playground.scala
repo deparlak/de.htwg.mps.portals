@@ -7,6 +7,7 @@ sealed trait Move
 
 final case class InvalidMove(reason : String = "") extends Move
 final case class Moved(player : Player, terrain : Terrain) extends Move
+final case class PayMovement(player : Player) extends Move
 final case class Destroyed(player : Player, destroyed : Player) extends Move
 
 class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[Position, Player] = Map()) {
@@ -19,9 +20,14 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   }
   
   // move the following player
-  def move(movePlayer : Player) : (Move, Playground) = {
-    val from = movePlayer.position
-    val to = movePlayer.nextPosition
+  def move(p : Player) : (Move, Playground) = {
+    if (p.paidMovementCost) positionCheck(p) else payMovementCost(p)
+  }
+  
+  // check if positions are valid
+  private def positionCheck(p : Player) : (Move, Playground) = {
+    val from = p.position
+    val to = p.nextPosition
     // check for valid positions
     (player.get(from), player.get(to), terrain.get(to)) match {
       // player is on a position which does not exist
@@ -35,6 +41,12 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
     }
   }
 
+  // pay the movement cost.
+  private def payMovementCost(p : Player) : (Move, Playground) = {
+    val updatedPlayer = player + (p.position -> p.paiyMovementCost)
+    (PayMovement(p), new Playground(terrain, updatedPlayer))
+  }
+  
   // we have a collision move
   // This mean a player like to move to a place where another player is already
   private def collisionMove(from : Player, to : Player, t : Terrain) : (Move, Playground) = {
@@ -43,19 +55,19 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   
   // a valid collision, which remove the collosioned Player
   private def validCollision(from : Player, to : Player, t : Terrain) : (Move, Playground) = {
-    val updatedPlayer = player - from.position - to.position + (from.nextPosition -> from.validMove)
+    val updatedPlayer = player - to.position + (from.nextPosition -> from.validMove(t.movementCost))
     (Destroyed(from , to), new Playground(terrain, updatedPlayer))
   }
   
   // an invalid move which update the player with the new position
   private def invalidMove(p : Player) : (Move, Playground) = {
-    val updatedPlayer = player - p.position + (p.position -> p.invalidMove)
+    val updatedPlayer = player + (p.position -> p.invalidMove)
     (InvalidMove(), new Playground(terrain, updatedPlayer))
   }
   
   // a invalid move which update the player with a new direction to move
   private def validMove(p : Player, t : Terrain) : (Move, Playground) = {
-    val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove)
+    val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove(t.movementCost))
     (Moved(p, t), new Playground(terrain, updatedPlayer))
   }
   

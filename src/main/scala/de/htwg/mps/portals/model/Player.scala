@@ -11,6 +11,8 @@ sealed trait Player {
   def uuid : String = null
   def position : Position
   def direction : Direction
+  def paidMovementCost : Boolean = (0 == movementCost)
+  def movementCost : Int
   def switchDirection(direction : Direction) : Player
   def nextPosition : Position = direction match {    
     case Up 	=> position.up
@@ -19,7 +21,8 @@ sealed trait Player {
     case Right 	=> position.right
     case Stay   => position
   }
-  def validMove : Player
+  def validMove(movementCost : Int) : Player
+  def paiyMovementCost : Player
   def invalidMove : Player
   def destroy(player : Player) = false
 }
@@ -29,8 +32,8 @@ object Player {
   def HumanPlayer1 = "1"
   
   def apply(char : Char, position : Position) : Option[Player] = char match {
-    case '1' => Some(Human(HumanPlayer1, position, Stay))
-    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Up, Stay))
+    case '1' => Some(Human(HumanPlayer1, position, Stay, 0))
+    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Up, Stay, 0))
     case _	 => None
   }
 }
@@ -38,25 +41,29 @@ object Player {
 case class Human(
     override val uuid : String, 
     override val position : Position,
-    override val direction : Direction) extends Player {
+    override val direction : Direction,
+    override val movementCost : Int) extends Player {
   override def toString = "1"
-  def switchDirection(direction : Direction) = new Human(uuid, position, direction)
-  def validMove = new Human(uuid, nextPosition, direction)
-  def invalidMove = new Human(uuid, position, Stay)
+  def switchDirection(direction : Direction) = new Human(uuid, position, direction, movementCost)
+  def validMove(movementCost : Int) = new Human(uuid, nextPosition, direction, movementCost)
+  def invalidMove = new Human(uuid, position, Stay, movementCost)
+  def paiyMovementCost() = new Human(uuid, position, direction, movementCost-1);
 }
 
 case class Bot(override val uuid : String,
     override val position : Position,
     override val direction : Direction,
-    val lastValid : Direction) extends Player {
+    val lastValid : Direction,
+    override val movementCost : Int) extends Player {
   override def toString = "B"
   override def destroy(player : Player) = player match {
     case (player : Human) => true
     case (bot : Bot)	  => false
   }
-  def switchDirection(direction : Direction) = new Human(uuid, position, direction)
-  def validMove = new Bot(uuid, nextPosition, direction, direction)
-  def invalidMove = new Bot(uuid, position, switchDirection(lastValid, direction), direction)
+  def switchDirection(direction : Direction) = new Human(uuid, position, direction, movementCost)
+  def validMove(movementCost : Int) = new Bot(uuid, nextPosition, direction, direction, movementCost)
+  def invalidMove = new Bot(uuid, position, switchDirection(lastValid, direction), direction, movementCost)
+  def paiyMovementCost() = new Bot(uuid, position, direction, direction, movementCost-1)
   private def switchDirection(lastValid : Direction, lastInvalid : Direction) : Direction = (lastValid, lastInvalid) match {
     case (Up, Up) 		=> Left
     case (Up, Left) 	=> Right

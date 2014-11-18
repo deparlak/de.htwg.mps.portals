@@ -24,6 +24,7 @@ class Tui(val controller: Controller) extends Observer[Event] {
     e match {
       case _: NewGame  => newGame
       case _: Update   => updatePlayground
+      case _: Wait	   => None
       case _: GameWon  => gameWon
       case _: GameLost => gameLost
     }
