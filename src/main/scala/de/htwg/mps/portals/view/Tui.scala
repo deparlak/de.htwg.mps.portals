@@ -13,54 +13,37 @@ class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI()
   val player = Player.HumanPlayer1
-  var level = Path("res") walkFilter { p => p.isFile }
+  var level = Path("res").walkFilter { p => p.isFile }
   var currentLevel = ""
-  var gameWasWon = true
-  ui.area.text = "Welcome to Portals. Press enter to start."
+  nextLevel
 
   def update(e: Event) = {
     e match {
-      case _: NewGame  => newGame
-      case _: Update   => updatePlayground
+      case _: NewGame  => ui.update(controller.playground.toString)
+      case _: Update   => ui.update(controller.playground.toString)
       case _: Wait	   => None
       case _: GameWon  => gameWon
-      case _: GameLost => gameLost
+      case _: GameLost => ui.update(controller.playground.toString + "\nYou lost the game. Hit enter to restart.")
     }
   }
 
-  def gameLost = {
-    ui.area.text = "You lost the game. Hit enter to restart."
-  }
-
-  def newGame = {
-    ui.area.text = controller.playground.toString
-    gameWasWon = false
-  }
-
-  def updatePlayground = ui.area.text = controller.playground.toString
-
   def gameWon = {
-    ui.area.text = "You won the game. Press enter for the next level."
-    gameWasWon = true
-  }
-
-  def firstLevel: Unit = {
-    level = Path("res") walkFilter { p => p.isFile };
-    if (level.hasNext) nextLevel
+    nextLevel
   }
 
   def nextLevel: Unit = if (level.hasNext) {
     currentLevel = level.next.toString
     controller.load(currentLevel) 
   } else {
-    firstLevel
+    level = Path("res") walkFilter { p => p.isFile };
+    if (level.hasNext) nextLevel
   }
 
   def restartLevel: Unit = controller.load(currentLevel)
 
   class UI extends MainFrame {
     title = "Portals"
-    preferredSize = new Dimension(400, 240)
+    preferredSize = new Dimension(400, 250)
 
     val area = new TextArea() {
       text = controller.playground.toString
@@ -72,9 +55,11 @@ class Tui(val controller: Controller) extends Observer[Event] {
         case KeyPressed(_, Key.Down, _, _) 	=> controller.moveDown(player)
         case KeyPressed(_, Key.Left, _, _) 	=> controller.moveLeft(player)
         case KeyPressed(_, Key.Right, _, _) => controller.moveRight(player)
-        case KeyPressed(_, Key.Enter, _, _) => if (gameWasWon) nextLevel else restartLevel
+        case KeyPressed(_, Key.Enter, _, _) => restartLevel
       }
     }
+    
+    def update(text : String) = area.text = text
 
     contents = new BoxPanel(Orientation.Vertical) {
       contents += area
