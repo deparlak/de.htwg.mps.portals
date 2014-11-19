@@ -15,7 +15,6 @@ class Tui(val controller: Controller) extends Observer[Event] {
   var player = Player.HumanPlayer1
   var level = Path("res") walkFilter { p => p.isFile }
   var currentLevel = ""
-  var gameRunning = false
   var gameWasWon = true
   ui.area.text = "Welcome to Portals. Press enter to start."
 
@@ -31,20 +30,17 @@ class Tui(val controller: Controller) extends Observer[Event] {
 
   def gameLost = {
     ui.area.text = "You lost the game. Hit enter to restart."
-    gameRunning = false
   }
 
   def newGame = {
     ui.area.text = controller.playground.toString
-    gameRunning = true
     gameWasWon = false
   }
 
-  def updatePlayground = if (gameRunning) ui.area.text = controller.playground.toString
+  def updatePlayground = ui.area.text = controller.playground.toString
 
   def gameWon = {
     ui.area.text = "You won the game. Press enter for the next level."
-    gameRunning = false
     gameWasWon = true
   }
 
@@ -72,10 +68,10 @@ class Tui(val controller: Controller) extends Observer[Event] {
       font = new Font("monospaced", 0, 14)
       listenTo(keys)
       reactions += {
-        case KeyPressed(_, Key.Up, _, _) 	=> if (gameRunning) controller.moveUp(player)
-        case KeyPressed(_, Key.Down, _, _) 	=> if (gameRunning) controller.moveDown(player)
-        case KeyPressed(_, Key.Left, _, _) 	=> if (gameRunning) controller.moveLeft(player)
-        case KeyPressed(_, Key.Right, _, _) => if (gameRunning) controller.moveRight(player)
+        case KeyPressed(_, Key.Up, _, _) 	=> controller.moveUp(player)
+        case KeyPressed(_, Key.Down, _, _) 	=> controller.moveDown(player)
+        case KeyPressed(_, Key.Left, _, _) 	=> controller.moveLeft(player)
+        case KeyPressed(_, Key.Right, _, _) => controller.moveRight(player)
         case KeyPressed(_, Key.Enter, _, _) => if (gameWasWon) nextLevel else restartLevel
       }
     }

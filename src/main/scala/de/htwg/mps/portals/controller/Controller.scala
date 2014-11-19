@@ -23,7 +23,7 @@ class Controller(var playground: Playground) extends Observable[Event] {
   def moveRight(uuid : String) = playground = playground.setMove(uuid, Right);
 
   // move the item "from" position "to" another position and notify the observers
-  private def move(player : Player): Unit = {
+  private def move(player : Player): Unit = if (timer.isRunning) {
 	//notifyObservers(new Update);
 	playground.move(player) match {
 	  case (m : InvalidMove, p : Playground) => playground = p;
