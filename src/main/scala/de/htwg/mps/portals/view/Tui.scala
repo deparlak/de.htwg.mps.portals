@@ -12,7 +12,7 @@ import de.htwg.mps.portals.controller._
 class Tui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val ui = new UI()
-  var player = Player.HumanPlayer1
+  val player = Player.HumanPlayer1
   var level = Path("res") walkFilter { p => p.isFile }
   var currentLevel = ""
   var gameWasWon = true

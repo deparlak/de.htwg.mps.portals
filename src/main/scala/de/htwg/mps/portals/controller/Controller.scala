@@ -13,7 +13,7 @@ final case class GameWon() extends Event
 final case class NewGame() extends Event
 
 
-class Controller(var playground: Playground) extends Observable[Event] {
+class Controller(var playground: Playground = new Playground) extends Observable[Event] {
   // move a player with the specified uuid. The player will not be move directly. Otherwise
   // the direction will be set to which we like to move and a cyclic method will do
   // the move after a specified timeout
