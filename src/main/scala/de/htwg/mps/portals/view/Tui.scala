@@ -22,13 +22,9 @@ class Tui(val controller: Controller) extends Observer[Event] {
       case _: NewGame  => ui.update(controller.playground.toString)
       case _: Update   => ui.update(controller.playground.toString)
       case _: Wait	   => None
-      case _: GameWon  => gameWon
+      case _: GameWon  => nextLevel
       case _: GameLost => ui.update(controller.playground.toString + "\nYou lost the game. Hit enter to restart.")
     }
-  }
-
-  def gameWon = {
-    nextLevel
   }
 
   def nextLevel: Unit = if (level.hasNext) {
