@@ -41,11 +41,17 @@ class Gui(val controller: Controller) extends Observer[Event] {
   def restartLevel: Unit = controller.load(currentLevel)
 
   class UI extends MainFrame {
+    val colour = this.background
     var spriteMap : Map[Position, TerrainSprite] = Map()
     title = "Portals"
+    resizable = false
+    
+      
    // preferredSize = new Dimension(400, 250)
-/*
+
     val area = new TextArea() {
+      background = colour
+      requestFocus
       editable = false
       font = new Font("monospaced", 0, 14)
       listenTo(keys)
@@ -57,7 +63,7 @@ class Gui(val controller: Controller) extends Observer[Event] {
         case KeyPressed(_, Key.Enter, _, _) => restartLevel
       }
     }
- */   
+    
     def update(p : Player) = {
       val sprite1 = spriteMap.get(p.position)
       (sprite1) match {
@@ -79,10 +85,17 @@ class Gui(val controller: Controller) extends Observer[Event] {
       spriteMap = controller.playground.terrain.map{ case(k,v) => k -> TerrainSprite(v)}
       val sorted = spriteMap.toSeq.sortWith(_._1 < _._1)
       val sprites : List[Sprite] = sorted.map{ case(k,v) => v.sprite}.toList
-      
-      contents = new GridPanel(9, 26) {
-    	  sprites.foreach(sprite => { contents += sprite })
+           
+      val grid = new GridPanel(9, 26) { 
+        sprites.foreach(sprite => { contents += sprite })
       }
+      
+      contents = new BoxPanel(Orientation.Vertical) {
+    	  contents += grid  
+          contents += area
+    	  border = Swing.EmptyBorder(15, 15, 15, 0)
+      }
+      area.requestFocus
       
       // initial position of players.
       controller.playground.player.foreach({ case(k,v) => this.update(v)})
