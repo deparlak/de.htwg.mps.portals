@@ -51,7 +51,7 @@ class Controller(var playground: Playground = new Playground) extends Observable
   }
 
   // load a new playground
-  def load(file: String) {
+  def load(file: String = "res/level1.txt") {
     timer.stop
     playground = playground.load(file)
     notifyObservers(new NewGame);

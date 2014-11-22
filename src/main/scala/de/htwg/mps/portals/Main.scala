@@ -10,5 +10,6 @@ object Portals {
     val controller = new Controller()
     val gui = new Gui(controller)
     val tui = new Tui(controller)
+    controller.load()
   }
 }
