@@ -93,7 +93,7 @@ class Gui(val controller: Controller) extends Observer[Event] {
       contents = new BoxPanel(Orientation.Vertical) {
     	  contents += grid  
           contents += area
-    	  border = Swing.EmptyBorder(15, 15, 15, 0)
+    	  border = Swing.EmptyBorder(15, 15, 0, 15)
       }
       area.requestFocus
       
