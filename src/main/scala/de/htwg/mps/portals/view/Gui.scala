@@ -46,7 +46,7 @@ class Gui(val controller: Controller) extends Observer[Event] {
     val sprites : List[Sprite] = sorted.map{ case(k,v) => v.sprite}.toList
     output.contents.clear
 
-    val grid = new GridPanel(9, 26) { 
+    val grid = new GridPanel(13, 30) { 
       sprites.foreach(sprite => { contents += sprite })
     }
     output.contents += grid

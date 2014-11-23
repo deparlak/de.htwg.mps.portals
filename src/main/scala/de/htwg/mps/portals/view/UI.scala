@@ -20,9 +20,17 @@ class UI(val controller : Controller, output : Component) extends MainFrame {
     menuBar = new MenuBar {   
       contents += new Menu("Game") {      
         contents += new MenuItem(Action("Restart") { restartLevel })
+        contents += new MenuItem(Action("Help") {popupMenu.show(output, 0, 0)})
         contents += new Separator        
         contents += new MenuItem(Action("Exit") { System.exit(0) })
       }
+    }
+    
+    val popupMenu = new PopupMenu {
+    	contents += new Label("Portals")
+    	contents += new Label("Das Ziel ist das erreichen des Portals.")
+    	contents += new Label("Hierfür navigiert man mit den Pfeiltasten")
+    	contents += new Label("Gegner dürfen einen nicht berühren")
     }
 
     // Label which is for status output and handling user input
@@ -59,7 +67,7 @@ class UI(val controller : Controller, output : Component) extends MainFrame {
     }
     def nextLevel: Unit = if (level.hasNext)  {
       currentLevel = level.next.toString
-      controller.load(currentLevel) 
+      controller.load(currentLevel)
     } else {
       level = Path("res") walkFilter { p => p.isFile };
       if (level.hasNext) nextLevel
