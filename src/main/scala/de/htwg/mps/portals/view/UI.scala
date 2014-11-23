@@ -50,10 +50,13 @@ class UI(val controller : Controller, output : Component) extends MainFrame {
     input.requestFocus
     
     def gameWon = nextLevel
-    def gameLost = status("Game lost")
+    def gameLost = status("Game lost. Hit enter to restart this level.")
     
     // method for restarting a level and going to the nextLevel
-    def restartLevel: Unit = controller.load(currentLevel) 
+    def restartLevel: Unit = {
+      controller.load(currentLevel) 
+      status("")
+    }
     def nextLevel: Unit = if (level.hasNext)  {
       currentLevel = level.next.toString
       controller.load(currentLevel) 
