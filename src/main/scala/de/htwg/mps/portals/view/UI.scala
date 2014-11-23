@@ -9,20 +9,19 @@ import de.htwg.mps.portals.model.Player
 class UI(val controller : Controller, output : Component) extends MainFrame {
     val player = Player.HumanPlayer1
     var level = Path("res").walkFilter { p => p.isFile }
-    var currentLevel = ""
+    var currentLevel = level.next.toString
     val colour = this.background
 
     // MainFrame attributes
     title = "Portals"
     preferredSize = new Dimension(1024, 512)
-    resizable = true
+    resizable = false
     visible = true
     menuBar = new MenuBar {   
-      contents += new Menu("A Menu") {      
-        contents += new MenuItem("An item")      
-        contents += new MenuItem(Action("Action item") { println(title) })       
+      contents += new Menu("Game") {      
+        contents += new MenuItem(Action("Restart") { restartLevel })
         contents += new Separator        
-        contents += new CheckMenuItem("Check me")
+        contents += new MenuItem(Action("Exit") { System.exit(0) })
       }
     }
 
