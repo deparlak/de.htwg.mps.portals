@@ -76,19 +76,6 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
     // is the terrain walkable by the player?
     if (t.walkableBy(p)) validMove(p, t) else invalidMove(p)
   }
-
-  def size() : (Int, Int) = {
-    println(terrain.keys.toList)
-    val res = size(terrain.keys.toList, 0, 0)
-    (res._1 + 1, res._2 + 1)
-  }
-  
-  private def size(in : List[Position], width : Int, heigth : Int) : (Int, Int) = in match {
-    case p :: Nil  => (if (p.x > width) p.x else width, if (p.y > heigth) p.y else heigth)
-    case p :: rest => size(rest, if (p.x > width) p.x else width, if (p.y > heigth) p.y else heigth)
-    case Nil	   => (width, heigth)
-  }
-  
   
   // the complete playground as a formated string
   override def toString() = {
