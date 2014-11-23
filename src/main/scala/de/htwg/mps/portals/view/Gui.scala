@@ -29,14 +29,12 @@ class Gui(val controller: Controller) extends Observer[Event] {
   }
   
   def update(p : Player) = {
-    val sprite1 = spriteMap.get(p.position)
-    (sprite1) match {
-      case Some(s : TerrainSprite)	=> sprite1.get.leaveAnimation(p)
+    spriteMap.get(p.position) match {
+      case Some(s : TerrainSprite)	=> s.leaveAnimation(p)
       case None						=> None
     }
-    val sprite2 = spriteMap.get(p.nextPosition)
-    (sprite2) match {
-      case Some(s : TerrainSprite)	=> sprite2.get.enterAnimation(p)
+    spriteMap.get(p.nextPosition) match {
+      case Some(s : TerrainSprite)	=> s.enterAnimation(p)
       case None						=> None
     }
   }
