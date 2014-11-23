@@ -14,7 +14,7 @@ import de.htwg.mps.portals.model.Position
 
 class Gui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
-  var output = new FlowPanel()
+  val output = new FlowPanel()
   val ui = new UI(controller, output)
   var spriteMap : Map[Position, TerrainSprite] = Map()
   
@@ -31,12 +31,12 @@ class Gui(val controller: Controller) extends Observer[Event] {
   def update(p : Player) = {
     val sprite1 = spriteMap.get(p.position)
     (sprite1) match {
-      case Some(s : TerrainSprite)	=> sprite1.get.enterAnimation(p)
+      case Some(s : TerrainSprite)	=> sprite1.get.leaveAnimation(p)
       case None						=> None
     }
     val sprite2 = spriteMap.get(p.nextPosition)
     (sprite2) match {
-      case Some(s : TerrainSprite)	=> sprite2.get.leaveAnimation(p)
+      case Some(s : TerrainSprite)	=> sprite2.get.enterAnimation(p)
       case None						=> None
     }
   }
