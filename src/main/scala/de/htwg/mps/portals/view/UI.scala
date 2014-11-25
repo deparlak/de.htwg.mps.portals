@@ -68,6 +68,7 @@ class UI(val controller : Controller, output : Component) extends MainFrame {
     def nextLevel: Unit = if (level.hasNext)  {
       currentLevel = level.next.toString
       controller.load(currentLevel)
+      status("")
     } else {
       level = Path("res") walkFilter { p => p.isFile };
       if (level.hasNext) nextLevel
