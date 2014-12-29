@@ -3,7 +3,7 @@ resolvers += Classpaths.sbtPluginReleases
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.1")
 
 // Plugin for publishing scoverage results to coveralls
-addSbtPlugin("com.sksamuel.scoverage" %% "sbt-coveralls" % "0.0.5")
+addSbtPlugin("org.scoverage" % "sbt-coveralls" % "1.0.0.BETA1")
 
 // Plugin for code formatting:
 addSbtPlugin("com.typesafe.sbt" % "sbt-scalariform" % "1.3.0")
