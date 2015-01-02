@@ -1,5 +1,7 @@
 resolvers += Classpaths.sbtPluginReleases
 
+addSbtPlugin("com.sqality.scct" % "sbt-scct" % "0.3")
+
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.1")
 
 // Plugin for publishing scoverage results to coveralls

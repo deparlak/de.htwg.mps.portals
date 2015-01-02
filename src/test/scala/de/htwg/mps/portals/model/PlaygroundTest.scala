@@ -23,7 +23,7 @@ class PlaygroundTest extends SpecificationWithJUnit {
     "not move from an invalid position" in {
       val player = Human(UUID.randomUUID.toString, new Position(0, 1), Right, 0)
       val x = level1.move(player)
-      x._1 == InvalidMove("From invalid position") must beTrue
+      x._1 shouldEqual InvalidMove("From invalid position")
     }
 
     "not move to an invalid position" in {
@@ -38,7 +38,7 @@ class PlaygroundTest extends SpecificationWithJUnit {
         case Some(player) => player.switchDirection(Right)
       }
       val move = level1.move(player)
-      move._1 == Moved(new Human("1", new Position(3, 1), Stay, 0), Grass) must beTrue
+      move._1 shouldEqual Moved(new Human("1", new Position(3, 1), Stay, 0), Grass)
     }
 
   }
