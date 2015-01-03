@@ -1,10 +1,10 @@
 package de.htwg.mps.portals.model
 
-import org.specs2.mutable.Specification
 import java.util.UUID
-import org.specs2.mutable.SpecificationWithJUnit
-import java.io.File
+
 import scala.io.Source._
+
+import org.specs2.mutable.SpecificationWithJUnit
 
 class PlaygroundTest extends SpecificationWithJUnit {
   val playground = new Playground

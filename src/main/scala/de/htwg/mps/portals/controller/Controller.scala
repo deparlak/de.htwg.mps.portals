@@ -62,8 +62,10 @@ class Controller(var playground: Playground = new Playground) extends Observable
   // The method get all items from the playground which should be moved
   // Items which should be moved can be for example Players or Bots.
   val timer = Timer(50, true) {
-    playground.player.foreach{ 
-      case (position, player) => { if (player.direction != Stay) move(player) } 
-    }
+    timerMethod
+  }
+
+  def timerMethod = playground.player.foreach {
+    case (position, player) => { if (player.direction != Stay) move(player) }
   }
 }
