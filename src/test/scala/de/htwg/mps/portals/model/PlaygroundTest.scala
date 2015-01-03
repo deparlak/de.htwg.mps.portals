@@ -27,16 +27,13 @@ class PlaygroundTest extends SpecificationWithJUnit {
     }
 
     "not move to an invalid position" in {
-      val x = level1.player.get(new Position(3, 1)) match {
-        case Some(player) => level1.move(player.switchDirection(Up))
-      }
-      x._1 shouldEqual InvalidMove()
+      val player = level1.player.get(new Position(3, 1)).get.switchDirection(Up)
+      val move = level1.move(player)
+      move._1 shouldEqual InvalidMove()
     }
 
     "move to a valid position" in {
-      val player: Player = level1.player.get(new Position(3, 1)) match {
-        case Some(player) => player.switchDirection(Right)
-      }
+      val player: Player = level1.player.get(new Position(3, 1)).get.switchDirection(Right)
       val move = level1.move(player)
       move._1 shouldEqual Moved(new Human("1", new Position(3, 1), Stay, 0), Grass)
     }
@@ -51,12 +48,8 @@ class PlaygroundTest extends SpecificationWithJUnit {
   "A Human" should {
     level1 = playground.load("res/level1.txt")
     "not move to a position where another Player already is" in {
-      val player: Player = level1.player.get(new Position(3, 1)) match {
-        case Some(player) => player
-      }
-      val bot: Player = level1.player.get(new Position(1, 5)) match {
-        case Some(player) => player
-      }
+      val player: Player = level1.player.get(new Position(3, 1)).get
+      val bot: Player = level1.player.get(new Position(1, 5)).get
 
       level1 = level1.setMove("1", Left)
       level1 = level1.move(getPlayer(new Position(3, 1)))._2
@@ -76,12 +69,8 @@ class PlaygroundTest extends SpecificationWithJUnit {
   "A Bot" should {
     "move to a position where another Human already is and destroy it" in {
       level1 = playground.load("res/level1.txt")
-      var player: Player = level1.player.get(new Position(3, 1)) match {
-        case Some(player) => player
-      }
-      val bot: Player = level1.player.get(new Position(1, 5)) match {
-        case Some(bot) => bot
-      }
+      var player: Player = level1.player.get(new Position(3, 1)).get
+      val bot: Player = level1.player.get(new Position(1, 5)).get
 
       level1 = level1.setMove("1", Left)
       level1 = level1.move(getPlayer(new Position(3, 1)))._2
@@ -102,9 +91,7 @@ class PlaygroundTest extends SpecificationWithJUnit {
   }
 
   def getPlayer(p: Position): Player = {
-    level1.player.get(p) match {
-      case Some(player) => player
-    }
+    level1.player.get(p).get
   }
 
 }
