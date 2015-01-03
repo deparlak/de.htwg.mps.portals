@@ -50,7 +50,8 @@ case class Human(
   def paiyMovementCost() = new Human(uuid, position, direction, movementCost-1);
 }
 
-case class Bot(override val uuid : String,
+case class Bot(
+    override val uuid : String,
     override val position : Position,
     override val direction : Direction,
     val lastValid : Direction,
@@ -60,7 +61,7 @@ case class Bot(override val uuid : String,
     case (player : Human) => true
     case (bot : Bot)	  => false
   }
-  def switchDirection(direction : Direction) = new Human(uuid, position, direction, movementCost)
+  def switchDirection(direction : Direction) = this
   def validMove(movementCost : Int) = new Bot(uuid, nextPosition, direction, direction, movementCost)
   def invalidMove = new Bot(uuid, position, switchDirection(lastValid, direction), direction, movementCost)
   def paiyMovementCost() = new Bot(uuid, position, direction, direction, movementCost-1)

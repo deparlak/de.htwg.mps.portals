@@ -61,13 +61,13 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
   
   // an invalid move which update the player with the new position
   private def invalidMove(p : Player) : (Move, Playground) = {
-    val updatedPlayer = player + (p.position -> p.invalidMove)
+    val updatedPlayer = player + (p.position -> p.invalidMove.switchDirection(Stay))
     (InvalidMove(), new Playground(terrain, updatedPlayer))
   }
   
   // a invalid move which update the player with a new direction to move
   private def validMove(p : Player, t : Terrain) : (Move, Playground) = {
-    val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove(t.movementCost))
+    val updatedPlayer = player - p.position + (p.nextPosition -> p.validMove(t.movementCost).switchDirection(Stay))
     (Moved(p, t), new Playground(terrain, updatedPlayer))
   }
   
