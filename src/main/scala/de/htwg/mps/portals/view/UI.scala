@@ -3,13 +3,13 @@ package de.htwg.mps.portals.view
 import scala.swing._
 import scala.swing.event._
 import scala.reflect.io.Path
+import de.htwg.mps.portals.util.Level
 import de.htwg.mps.portals.controller.Controller
 import de.htwg.mps.portals.model.Player
 
 class UI(val controller: Controller, output: Component) extends MainFrame {
   val player = Player.HumanPlayer1
-  var level = Path("res").walkFilter { p => p.isFile }
-  var currentLevel = level.next.toString
+  val level = new Level
   val colour = this.background
 
   // MainFrame attributes
@@ -62,16 +62,12 @@ class UI(val controller: Controller, output: Component) extends MainFrame {
 
   // method for restarting a level and going to the nextLevel
   def restartLevel: Unit = {
-    controller.load(currentLevel)
+    controller.load(level.currentLevel)
     status("")
   }
-  def nextLevel: Unit = if (level.hasNext) {
-    currentLevel = level.next.toString
-    controller.load(currentLevel)
+  def nextLevel: Unit = {
+    controller.load(level.nextLevel)
     status("")
-  } else {
-    level = Path("res") walkFilter { p => p.isFile };
-    if (level.hasNext) nextLevel
   }
 
   // the status of the UI
