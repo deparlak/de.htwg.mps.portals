@@ -9,7 +9,7 @@ import scala.swing.Panel
 import javax.swing.JPanel
 
 class Sprite(val image : String, val width : Int, val height : Int, val x : Int, val y : Int) extends Panel {
-  val bufferedImage = ImageIO.read(new File(image))  
+  val bufferedImage = ImageIO.read(getClass.getResource(image))  
   val at = new AffineTransform
   val scaleX = 1.0
   val scaleY = 1.0

@@ -3,6 +3,7 @@ package de.htwg.mps.portals.controller
 import de.htwg.mps.portals.model._
 import de.htwg.mps.portals.util.Observable
 import de.htwg.mps.portals.util.Timer
+import de.htwg.mps.portals.util.Level
 
 // Events which could be fired by the controller
 sealed trait Event
@@ -51,7 +52,7 @@ class Controller(var playground: Playground = new Playground) extends Observable
   }
 
   // load a new playground
-  def load(file: String = "res/level1.txt") {
+  def load(file: String = new Level().firstNormalLevel) {
     timer.stop
     playground = playground.load(file)
     notifyObservers(new NewGame);

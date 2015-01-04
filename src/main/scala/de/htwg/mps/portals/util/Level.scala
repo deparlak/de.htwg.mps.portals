@@ -3,20 +3,23 @@ package de.htwg.mps.portals.util
 import scala.reflect.io.Path
 
 class Level {
-  var level = Path("res").walkFilter { p => p.isFile }
-  var current = level.next.toString
+  var mode = "normal"
+  var current = 1
+  
+  private def getLevel(level : Int) : String =  "/level/" + mode + "/" + current.toString + ".txt"
   
   def nextLevel : String = {
-    if (level.hasNext) {
-      current = level.next.toString
-    } else {
-      level = Path("res") walkFilter { p => p.isFile };
-      current = level.next.toString
-    }
-    current
+    current = if (hasNext) current + 1 else 1
+    getLevel(current)
   }
   
-  def currentLevel = current
+  def currentLevel = getLevel(current)
   
-  def hasNext : Boolean = level.hasNext
+  def hasNext : Boolean = if (null != getClass.getResource(getLevel(current + 1))) true else false
+  
+  def firstNormalLevel : String = {
+    current = 1
+    mode = "normal"
+    getLevel(current)
+  }
 }

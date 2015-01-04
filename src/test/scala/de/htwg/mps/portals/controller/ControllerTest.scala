@@ -3,12 +3,14 @@ package de.htwg.mps.portals.controller
 import org.specs2.mutable.SpecificationWithJUnit
 import de.htwg.mps.portals.model.Position
 import de.htwg.mps.portals.model.Player
+import de.htwg.mps.portals.util.Level
 
 class ControllerTest extends SpecificationWithJUnit {
-
+  val firstNormalLevel = new Level().firstNormalLevel
+  
   "The controller" should {
     val controller = new Controller
-    controller.load("res/level1.txt")
+    controller.load(firstNormalLevel)
     "initialize the timer" in {
       controller.timer must be_!=(null)
     }
@@ -76,7 +78,7 @@ class ControllerTest extends SpecificationWithJUnit {
 
   def update(c: Controller) = c.timerMethod
   def reset(c: Controller) {
-    c.load("res/level1.txt")
+    c.load(firstNormalLevel)
     c.timer.stop
   }
 

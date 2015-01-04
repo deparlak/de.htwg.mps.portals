@@ -94,7 +94,7 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
 
   // load a new playground
   def load(file: String): Playground = {
-    val source = fromFile(file)
+    val source = fromURL(getClass.getResource(file))
     val arr = source.map(_.toChar).toArray
     var terrain : Map[Position, Terrain] = Map()
     var player : Map[Position, Player] = Map()  
