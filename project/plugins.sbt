@@ -1,5 +1,7 @@
 resolvers += Classpaths.sbtPluginReleases
 
+addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
+
 addSbtPlugin("com.sqality.scct" % "sbt-scct" % "0.3")
 
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.0.1")
