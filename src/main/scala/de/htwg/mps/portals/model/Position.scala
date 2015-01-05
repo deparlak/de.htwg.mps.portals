@@ -8,7 +8,7 @@ class Position(val x : Int, val y : Int) extends Ordered[Position] {
       case that: Position => this.x == that.x && this.y == that.y 
       case _ => false 
     }
-    override def toString() = "(" + x + "," + y + ")"
+    override def toString() = x + "," + y
     
     override def compare(that : Position) = {
       val diff = this.y - that.y
