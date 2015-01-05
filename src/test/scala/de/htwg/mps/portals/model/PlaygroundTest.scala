@@ -12,7 +12,7 @@ class PlaygroundTest extends SpecificationWithJUnit {
 
   "The text representation of the playground" should {
     level1 = playground.load(firstLevel)
-    val input = fromFile(firstLevel).mkString
+    val input = fromFile("src/main/resources" + firstLevel).mkString
     "be the same as the input" in {
       level1.toString == input
     }
