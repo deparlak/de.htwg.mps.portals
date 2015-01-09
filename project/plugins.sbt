@@ -1,5 +1,7 @@
 resolvers += Classpaths.sbtPluginReleases
 
+addCompilerPlugin("com.escalatesoft.subcut" %% "subcut" % "2.1") 
+
 addSbtPlugin("com.typesafe.sbteclipse" % "sbteclipse-plugin" % "2.5.0")
 
 addSbtPlugin("com.sqality.scct" % "sbt-scct" % "0.3")

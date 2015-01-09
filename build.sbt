@@ -16,7 +16,7 @@ libraryDependencies ++= Seq(
   "org.scalatest" %% "scalatest" % "2.2.1" % "test",
   "org.scala-lang.modules" % "scala-swing_2.11" % "1.0.1",
   "org.scala-lang" % "scala-reflect" % "2.10.0",
-  "com.escalatesoft.subcut" %% "subcut" % "2.1"
+  "com.escalatesoft.subcut" % "subcut_2.10" % "2.1"
 )
 
 // EclipseKeys.withSource := true
