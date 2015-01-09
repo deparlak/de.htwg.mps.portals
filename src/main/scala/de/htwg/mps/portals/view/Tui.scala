@@ -7,9 +7,12 @@ import de.htwg.mps.portals.util.Observer
 import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.controller.Event
 import de.htwg.mps.portals.controller._
+import com.escalatesoft.subcut.inject.AutoInjectable
+import com.escalatesoft.subcut.inject.BindingModule
 
 
-class Tui(val controller: Controller) extends Observer[Event] {
+class Tui(implicit val bindingModule: BindingModule) extends Observer[Event]  with UserInterface with AutoInjectable {
+  val controller = inject [Controller]
   controller.add(this)
   val output = new TextArea() {
     focusable = false

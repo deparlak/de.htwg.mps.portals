@@ -10,9 +10,12 @@ import de.htwg.mps.portals.controller._
 import de.htwg.mps.portals.util.Sprite
 import de.htwg.mps.portals.util.TerrainSprite
 import de.htwg.mps.portals.model.Position
+import com.escalatesoft.subcut.inject.AutoInjectable
+import com.escalatesoft.subcut.inject.BindingModule
 
 
-class Gui(val controller: Controller) extends Observer[Event] {
+class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] with UserInterface with AutoInjectable {
+  val controller = inject [Controller]
   controller.add(this)
   val output = new FlowPanel()
   val ui = new UI(controller, output)
