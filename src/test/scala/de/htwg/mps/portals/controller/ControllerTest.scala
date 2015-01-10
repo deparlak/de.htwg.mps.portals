@@ -74,6 +74,17 @@ class ControllerTest extends SpecificationWithJUnit {
       }
       controller.timer.isRunning must beFalse
     }
+    
+    "stop the timer at the end of the game" in {
+      controller.load(firstNormalLevel)
+      val botID = controller.playground.player.get(new Position(1, 5)).get.uuid
+      val player = "1"
+      for (i <- 1 to 45) {
+        controller moveRight player
+        update(controller)
+      }
+      controller.timer.isRunning must beFalse
+    }
   }
 
   def update(c: Controller) = c.timerMethod
