@@ -12,7 +12,7 @@ import com.escalatesoft.subcut.inject.BindingModule
 
 
 class Tui(implicit val bindingModule: BindingModule) extends Observer[Event]  with UserInterface with AutoInjectable {
-  val controller = inject [Controller]
+  val controller = inject [IController]
   controller.add(this)
   val output = new TextArea() {
     focusable = false

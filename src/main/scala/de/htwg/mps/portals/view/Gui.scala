@@ -15,7 +15,7 @@ import com.escalatesoft.subcut.inject.BindingModule
 
 
 class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] with UserInterface with AutoInjectable {
-  val controller = inject [Controller]
+  val controller = inject [IController]
   controller.add(this)
   val output = new FlowPanel()
   val ui = new UI(controller, output)
