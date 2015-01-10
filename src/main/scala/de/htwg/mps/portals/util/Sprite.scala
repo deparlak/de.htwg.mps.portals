@@ -17,7 +17,7 @@ class Sprite(val image : String, val width : Int, val height : Int, val x : Int,
 
   // paint the selected element of the sprite
   override def paintComponent(g:Graphics2D) = {
-    g.drawImage(bufferedImage, at, null)         
+    g.drawImage(bufferedImage, at, null)  
   }
 
   // override the size of the panel, to be conform with the size of one element of the sprite.

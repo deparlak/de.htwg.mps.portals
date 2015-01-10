@@ -10,13 +10,13 @@ import de.htwg.mps.portals.controller._
 import de.htwg.mps.portals.util.Sprite
 import de.htwg.mps.portals.util.TerrainSprite
 import de.htwg.mps.portals.model.Position
+import de.htwg.mps.portals.util.PlayerSprite
 
 
 class Gui(val controller: Controller) extends Observer[Event] {
   controller.add(this)
   val output = new FlowPanel()
   val ui = new UI(controller, output)
-  var spriteMap : Map[Position, TerrainSprite] = Map()
   
   def update(e: Event) = {
     e match {
@@ -28,30 +28,46 @@ class Gui(val controller: Controller) extends Observer[Event] {
     }
   }
   
-  def update(p : Player) = {
-    spriteMap.get(p.position) match {
-      case Some(s : TerrainSprite)	=> s.leaveAnimation(p)
+  def update(p : Player) = {/*
+ //   spriteMap.get(p.position) match {
+   //   case Some(s : TerrainSprite)	=> s.leaveAnimation(p)
       case None						=> None
     }
-    spriteMap.get(p.nextPosition) match {
-      case Some(s : TerrainSprite)	=> s.enterAnimation(p)
+  //  spriteMap.get(p.nextPosition) match {
+   //   case Some(s : TerrainSprite)	=> s.enterAnimation(p)
       case None						=> None
-    }
+    }*/
   }
 
 
   def newGame() {
-    spriteMap = controller.playground.terrain.map{ case(k,v) => k -> TerrainSprite(v)}
-    val sorted = spriteMap.toSeq.sortWith(_._1 < _._1)
-    val sprites : List[Sprite] = sorted.map{ case(k,v) => v.sprite}.toList
+    val offset = 48
+    val sprites = controller.playground.terrain.map{ case(position, terreain) => position -> TerrainSprite(terreain).sprite }
+    
     output.contents.clear
 
-    val grid = new GridPanel(controller.playground.PlaygroundHeight , controller.playground.PlaygroundWidth) { 
-      sprites.foreach(sprite => { contents += sprite })
+    val grid = new NullPanel() {
+      preferredSize = new Dimension(1024,512)
+
+      sprites foreach {case (position, sprite) => 
+        add(sprite, sprite.width * position.x + offset, sprite.height * position.y) 
+      }
     }
+    
     output.contents += grid
     ui.visible = true
     // visible initial position of players.
     controller.playground.player.foreach({ case(k,v) => this.update(v)})
   }
+  
+  // Null Panel, which allow us to set the panel to a self defined position (without a layout manager).
+  class NullPanel extends Panel {
+	peer.setLayout(null)
+    protected def add(comp: Component, x: Int, y: Int): Unit = {
+	  val p = comp.peer
+	  p.setLocation(x, y)
+	  p.setSize(p.getPreferredSize) // !
+	  peer.add(p)
+	 }
+   }
 }
