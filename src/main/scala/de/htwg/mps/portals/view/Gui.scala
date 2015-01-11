@@ -10,12 +10,21 @@ import de.htwg.mps.portals.controller._
 import de.htwg.mps.portals.model.Position
 import com.escalatesoft.subcut.inject.AutoInjectable
 import com.escalatesoft.subcut.inject.BindingModule
+import de.htwg.mps.portals.swing.TerrainSprite
+import de.htwg.mps.portals.swing.util.NullPanel
+import de.htwg.mps.portals.swing.PlayerSprite
+import de.htwg.mps.portals.swing.util.Sprite
+import scala.concurrent.Await
+import scala.concurrent.duration._
+import java.util.concurrent.Future
+import scala.concurrent.Awaitable
 
 
 class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] with UserInterface with AutoInjectable {
   val controller = inject [IController]
   controller.add(this)
   val playerList = scala.collection.mutable.HashMap[String, PlayerSprite]()
+  val playerAnimation = scala.collection.mutable.HashMap[String, Awaitable[Future[Boolean]]]()
   val offset = 48
   val output = new FlowPanel()
   val ui = new UI(controller, output)
@@ -31,10 +40,16 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
     }
   }
   
+
   def update(player : Player) = {
     val visual = playerList.get(player.uuid).get
-
-    visual.animate(player)
+    
+    playerAnimation.get(player.uuid) match {
+      case None 	=>  None
+      case lastMove =>  Await.result(lastMove.get, 2 seconds)
+    }
+    
+    playerAnimation - player.uuid + (player.uuid -> visual.animate(player))
   }
 
 
