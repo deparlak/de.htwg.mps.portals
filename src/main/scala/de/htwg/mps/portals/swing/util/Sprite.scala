@@ -1,8 +1,7 @@
-package de.htwg.mps.portals.util
+package de.htwg.mps.portals.swing.util
 
 import java.awt.geom.AffineTransform
 import java.awt.Graphics2D
-import java.io.File
 import javax.imageio.ImageIO
 import java.awt.Dimension
 import scala.swing.Panel
@@ -33,6 +32,12 @@ class Sprite(val image : String, val width : Int, val height : Int, val x : Int,
     at.translate(x + imageWidth / 2, y + imageHeight / 2);
     at.translate(-imageWidth / 2, -imageHeight / 2);
     at.scale(scaleX, scaleY);
+    this.repaint
+  }
+  
+  // move the complete component to the specified coordinates.
+  def move(x : Int, y : Int) {
+    this.peer.setLocation(x, y)
     this.repaint
   }
   
