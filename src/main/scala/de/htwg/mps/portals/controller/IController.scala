@@ -3,6 +3,7 @@ package de.htwg.mps.portals.controller
 import de.htwg.mps.portals.util.Level
 import de.htwg.mps.portals.util.Observable
 import de.htwg.mps.portals.model.Playground
+import de.htwg.mps.portals.util.Timer
 
 trait IController extends Observable[Event]  {
   def moveUp(uuid: String)
@@ -14,6 +15,7 @@ trait IController extends Observable[Event]  {
   def load(file: String = new Level().firstNormalLevel)
 
   def timerMethod
+  val timer: Timer
   
   var playground: Playground
 }
