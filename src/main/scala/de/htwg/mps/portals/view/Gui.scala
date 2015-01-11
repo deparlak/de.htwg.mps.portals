@@ -8,13 +8,12 @@ import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.controller.Event
 import de.htwg.mps.portals.controller._
 import de.htwg.mps.portals.model.Position
-import de.htwg.mps.portals.swing.TerrainSprite
-import de.htwg.mps.portals.swing.util.NullPanel
-import de.htwg.mps.portals.swing.PlayerSprite
-import de.htwg.mps.portals.swing.util.Sprite
+import com.escalatesoft.subcut.inject.AutoInjectable
+import com.escalatesoft.subcut.inject.BindingModule
 
 
-class Gui(val controller: Controller) extends Observer[Event] {
+class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] with UserInterface with AutoInjectable {
+  val controller = inject [IController]
   controller.add(this)
   val playerList = scala.collection.mutable.HashMap[String, PlayerSprite]()
   val offset = 48

@@ -1,5 +1,4 @@
 language: scala
 scala:
    - 2.10
-script: "sbt scoverage:test"
-after_success: "sbt coveralls"
+script: "sbt test"

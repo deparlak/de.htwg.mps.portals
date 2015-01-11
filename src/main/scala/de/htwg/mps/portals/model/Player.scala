@@ -1,5 +1,10 @@
 package de.htwg.mps.portals.model
 
+import de.htwg.mps.portals.actor.AktorSystem
+import de.htwg.mps.portals.config.TestConfiguration
+import com.escalatesoft.subcut.inject.Injectable
+import de.htwg.mps.portals.actor.AktorSystem
+
 sealed trait Direction
 final case object Left extends Direction
 final case object Right extends Direction
@@ -28,12 +33,20 @@ sealed trait Player {
 }
 
 // companion object to get Terrain instances, like a factory method.
-object Player {
+object Player extends Injectable {
+  val bindingModule = TestConfiguration
+  val aktorSystem = inject[AktorSystem]
+  
   def HumanPlayer1 = "1"
   
   def apply(char : Char, position : Position) : Option[Player] = char match {
-    case '1' => Some(Human(HumanPlayer1, position, Stay, 0))
-    case 'B' => Some(Bot(java.util.UUID.randomUUID.toString, position, Up, Stay, 0))
+    case '1' => 
+      aktorSystem.createActorForPlayer(HumanPlayer1)
+      Some(Human(HumanPlayer1, position, Stay, 0))
+    case 'B' => 
+      val id = java.util.UUID.randomUUID.toString
+      aktorSystem.createActorForPlayer(id)
+      Some(Bot(id, position, Up, Stay, 0))
     case _	 => None
   }
 }

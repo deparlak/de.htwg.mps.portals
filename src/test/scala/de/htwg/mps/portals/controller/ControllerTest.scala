@@ -7,7 +7,7 @@ import de.htwg.mps.portals.util.Level
 
 class ControllerTest extends SpecificationWithJUnit {
   val firstNormalLevel = new Level().firstNormalLevel
-  
+
   "The controller" should {
     val controller = new Controller
     controller.load(firstNormalLevel)
@@ -32,21 +32,20 @@ class ControllerTest extends SpecificationWithJUnit {
 
     "move left the Player with the ID \"1\"" in {
       reset(controller)
-      val before = controller.playground.player.get(new Position(3, 1)).get.uuid
+      val before = controller.playground.player.get(new Position(3, 1))
       controller moveLeft "1"
       update(controller)
-      var after = controller.playground.player.get(new Position(3, 1)).get.uuid
-      after must beEqualTo(before)
+      var after = controller.playground.player.get(new Position(2, 1))
+      after must be_!=(null)
     }
 
     "move right the Player with the ID \"1\"" in {
       reset(controller)
-      val before = controller.playground.player.get(new Position(3, 1)).get.uuid
+      val before = controller.playground.player.get(new Position(3, 1))
       controller moveRight "1"
       update(controller)
-      update(controller)
-      val after = controller.playground.player.get(new Position(3, 1)).get.uuid
-      after must beEqualTo(before)
+      val after = controller.playground.player.get(new Position(4, 1))
+      after must be_!=(null)
     }
 
     "end the game if a bot destroys the human" in {
@@ -74,10 +73,25 @@ class ControllerTest extends SpecificationWithJUnit {
       }
       controller.timer.isRunning must beFalse
     }
+
+    "stop the timer at the end of the game" in {
+      controller.load(firstNormalLevel)
+      val botID = controller.playground.player.get(new Position(1, 5)).get.uuid
+      val player = "1"
+      for (i <- 1 to 45) {
+        controller moveRight player
+        update(controller)
+      }
+      controller.timer.isRunning must beFalse
+    }
   }
 
-  def update(c: Controller) = c.timerMethod
-  def reset(c: Controller) {
+  def update(c: IController) {
+    c.timerMethod
+    c.timer.stop
+  }
+  def reset(c: IController) {
+    c.notifyObservers(NewGame())
     c.load(firstNormalLevel)
     c.timer.stop
   }

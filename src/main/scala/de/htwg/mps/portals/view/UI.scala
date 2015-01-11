@@ -2,12 +2,12 @@ package de.htwg.mps.portals.view
 
 import scala.swing._
 import scala.swing.event._
-import scala.reflect.io.Path
-import de.htwg.mps.portals.util.Level
-import de.htwg.mps.portals.controller.Controller
-import de.htwg.mps.portals.model.Player
 
-class UI(val controller: Controller, output: Component) extends MainFrame {
+import de.htwg.mps.portals.controller.IController
+import de.htwg.mps.portals.model.Player
+import de.htwg.mps.portals.util.Level
+
+class UI(val controller: IController, output: Component) extends MainFrame {
   val player = Player.HumanPlayer1
   val level = new Level
   val colour = this.background
