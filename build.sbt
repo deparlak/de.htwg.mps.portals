@@ -24,7 +24,9 @@ libraryDependencies ++= Seq(
 
 // EclipseKeys.withJavadoc := true
 
+instrumentSettings
 
+ScoverageSbtPlugin.ScoverageKeys.coverageExcludedPackages := "de.htwg.mps.portals;de.htwg.mps.portals.actor.*;de.htwg.mps.portals.config.*;de.htwg.mps.portals.view.*"
 
 
 // no folders for src/main/java and src/test/java
