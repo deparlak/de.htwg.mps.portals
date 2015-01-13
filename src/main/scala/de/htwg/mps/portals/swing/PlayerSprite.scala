@@ -41,15 +41,16 @@ trait PlayerSprite {
   def animate(player : Player) : Future[Boolean] = Future {
     sprites foreach {case (sprite) => 
       sprite.visible = false
-      sprite.move(player.nextPosition.x * 32 + offset, player.nextPosition.y * 32)
+      sprite.move(player.nextPosition.x * width + offset, player.nextPosition.y * height)
       sprite.update(sprite.x, this.getDirectionOffset(player))
     }
      
     sprites foreach {case (sprite) => 
       sprite.visible = true
-      Thread.sleep(100)
+      Thread.sleep(10)
       sprite.visible = false
     }
+    sprites.head.visible = true
     true
   }
 }

@@ -16,7 +16,8 @@ import de.htwg.mps.portals.swing.PlayerSprite
 import de.htwg.mps.portals.swing.util.Sprite
 import scala.concurrent.Await
 import scala.concurrent.duration._
-import java.util.concurrent.Future
+import scala.concurrent.future
+import scala.concurrent.Future
 import scala.concurrent.Awaitable
 
 
@@ -24,7 +25,7 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
   val controller = inject [IController]
   controller.add(this)
   val playerList = scala.collection.mutable.HashMap[String, PlayerSprite]()
-  val playerAnimation = scala.collection.mutable.HashMap[String, Awaitable[Future[Boolean]]]()
+  val playerAnimation = scala.collection.mutable.HashMap[String, Future[Boolean]]()
   val offset = 48
   val output = new FlowPanel()
   val ui = new UI(controller, output)
@@ -42,19 +43,15 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
   
 
   def update(player : Player) = {
-    if (player.uuid == "1") {
-	    val visual = playerList.get(player.uuid).get
-	    println(playerAnimation.size)
-	    playerAnimation.get(player.uuid) match {
-	      case None 	=>  None
-	      case lastMove =>  {
-	        println("wait")
-	        Await.result(lastMove.get, 20 seconds)
-	      }
-	    }
-	    
-	    playerAnimation + (player.uuid -> visual.animate(player))
+    val visual = playerList.get(player.uuid).get
+    
+    playerAnimation.get(player.uuid) match {
+      case None 	=>  None
+      case lastMove =>  {
+        Await.result(lastMove.get, 2 seconds)
+      }
     }
+    playerAnimation += (player.uuid -> visual.animate(player))
   }
 
 
@@ -63,6 +60,7 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
     val terrain = controller.playground.terrain.map{ case(position, terreain) => position -> TerrainSprite(terreain).sprite }
     val player = controller.playground.player.map{ case(position, player) => player -> PlayerSprite(player) }
     
+    playerAnimation.clear
     playerList.clear
     output.contents.clear
 
