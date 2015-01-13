@@ -8,10 +8,12 @@ import scala.swing.Panel
 import javax.swing.JPanel
 
 class Sprite(val image : String, val width : Int, val height : Int, val x : Int, val y : Int) extends Panel {
-  val bufferedImage = ImageIO.read(getClass.getResource(image))  
+  var bufferedImage = ImageIO.read(getClass.getResource(image))  
   val at = new AffineTransform
   val scaleX = 1.0
   val scaleY = 1.0
+  this.visible = true
+  //this.peer.setComponentZOrder(this.peer, 1)
   update(x , y)
 
   // paint the selected element of the sprite
@@ -24,6 +26,11 @@ class Sprite(val image : String, val width : Int, val height : Int, val x : Int,
     override def getMinimumSize = new Dimension(width, height)
   	override def getPreferredSize = new Dimension(width, height)
   	override def getMaximumSize = new Dimension(width, height)
+  }
+  
+  def repaintImage(image : String) {
+    bufferedImage = ImageIO.read(getClass.getResource(image))  
+    this.repaint
   }
 
   // switch the sprite

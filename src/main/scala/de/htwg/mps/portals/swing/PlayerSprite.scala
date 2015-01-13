@@ -19,54 +19,67 @@ object PlayerSprite {
   def apply(player : Player) : PlayerSprite = player match {
     case Human(_,_,_,_) => new HumanPlayerSprite
     case Bot(_,_,_,_,_) => new BotPlayerSprite
-    case _				=> new EmptySprite
   }
 }
 
 trait PlayerSprite {
+  val sprites : List[Sprite]
   val width = 32
   val height = 32
   val offset = 48
-  def sprite : Sprite
-  def animate (player : Player) : Future[Boolean]
+
+  // offset for sprite on spritesheet.
   def getDirectionOffset (player : Player) : Int = player.direction match {
-      case de.htwg.mps.portals.model.Stay 	=> 0
-      case de.htwg.mps.portals.model.Right 	=> 0
-      case de.htwg.mps.portals.model.Left 	=> -32
-      case de.htwg.mps.portals.model.Up 	=> -64
-      case de.htwg.mps.portals.model.Down 	=> -96
+    case de.htwg.mps.portals.model.Stay 	=> 0
+    case de.htwg.mps.portals.model.Right 	=> 0
+    case de.htwg.mps.portals.model.Left 	=> -32
+    case de.htwg.mps.portals.model.Up 		=> -64
+    case de.htwg.mps.portals.model.Down 	=> -96
+  }
+  
+  // animation of the sprite as a future
+  def animate(player : Player) : Future[Boolean] = Future {
+    sprites foreach {case (sprite) => 
+      sprite.visible = false
+      sprite.move(player.nextPosition.x * 32 + offset, player.nextPosition.y * 32)
+      sprite.update(sprite.x, this.getDirectionOffset(player))
     }
+     
+    sprites foreach {case (sprite) => 
+      sprite.visible = true
+      Thread.sleep(100)
+      sprite.visible = false
+    }
+    true
+  }
 }
 
 class HumanPlayerSprite extends PlayerSprite {
-  val sprite = new Sprite ("/sprite/default/player/Human.png", width, height, 0, 0)
-  def animate(player : Player) : Future[Boolean] = Future {
-    
-    for( x <- 1 until 8){
-      sprite.move(player.nextPosition.x * 32 + offset, player.nextPosition.y * 32)
-      sprite.update(-32 * x, this.getDirectionOffset(player))
-      Thread.sleep(10)
-    }
-    true
-  }
+  val image = "/sprite/default/player/Human.png"
+  
+  val sprites : List[Sprite] = List(
+    new Sprite (image, width, height, 0, 0),
+    new Sprite (image, width, height, -32, 0),
+    new Sprite (image, width, height, -64, 0),
+    new Sprite (image, width, height, -96, 0),
+    new Sprite (image, width, height, -128, 0),
+    new Sprite (image, width, height, -160, 0),
+    new Sprite (image, width, height, -192, 0),
+    new Sprite (image, width, height, 0, 0)
+  )
 }
 
 class BotPlayerSprite extends PlayerSprite {
-  val sprite = new Sprite ("/sprite/default/player/Bot.png", 32, 32, 0, 0)
-  def animate(player : Player) : Future[Boolean] = Future {
-    
-    for( x <- 1 until 8){
-      sprite.move(player.nextPosition.x * 32 + offset, player.nextPosition.y * 32)
-      sprite.update(-32 * x, this.getDirectionOffset(player))
-      Thread.sleep(10)
-    }
-    true
-  }
-}
-
-class EmptySprite extends PlayerSprite {
-  val sprite = new Sprite ("/sprite/default/white.png", 32, 32, 0, 0)
-  def animate(player : Player) : Future[Boolean] = Future {
-    true
-  }
+  val image = "/sprite/default/player/Bot.png"
+  
+  val sprites : List[Sprite] = List(
+    new Sprite (image, width, height, 0, 0),
+    new Sprite (image, width, height, -32, 0),
+    new Sprite (image, width, height, -64, 0),
+    new Sprite (image, width, height, -96, 0),
+    new Sprite (image, width, height, -128, 0),
+    new Sprite (image, width, height, -160, 0),
+    new Sprite (image, width, height, -192, 0),
+    new Sprite (image, width, height, 0, 0)
+  )
 }

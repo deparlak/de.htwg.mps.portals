@@ -42,14 +42,19 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
   
 
   def update(player : Player) = {
-    val visual = playerList.get(player.uuid).get
-    
-    playerAnimation.get(player.uuid) match {
-      case None 	=>  None
-      case lastMove =>  Await.result(lastMove.get, 2 seconds)
+    if (player.uuid == "1") {
+	    val visual = playerList.get(player.uuid).get
+	    println(playerAnimation.size)
+	    playerAnimation.get(player.uuid) match {
+	      case None 	=>  None
+	      case lastMove =>  {
+	        println("wait")
+	        Await.result(lastMove.get, 20 seconds)
+	      }
+	    }
+	    
+	    playerAnimation + (player.uuid -> visual.animate(player))
     }
-    
-    playerAnimation - player.uuid + (player.uuid -> visual.animate(player))
   }
 
 
@@ -65,12 +70,14 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
       preferredSize = new Dimension(1024,512)
 
       player foreach {case (player, visual) => 
-        add(visual.sprite, visual.sprite.width * player.position.x + offset, visual.sprite.height * player.position.y)
+        visual.sprites foreach {case (sprite) =>
+          add(sprite, sprite.width * player.position.x + offset, sprite.height * player.position.y)
+        }
         playerList += (player.uuid -> visual)
       }
       
-      terrain foreach {case (position, sprite) => 
-        add(sprite, sprite.width * position.x + offset, sprite.height * position.y)
+      terrain foreach {case (position, t) => 
+        add(t, t.width * position.x + offset, t.height * position.y)
       }
     }
     
