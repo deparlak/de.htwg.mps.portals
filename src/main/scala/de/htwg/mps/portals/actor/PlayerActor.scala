@@ -25,6 +25,7 @@ class PlayerActor(
         case Down  => down += 1
         case Stay  => None
       }
+      
     case GameEvent(event) => event match {
       case event: NewGame => None
       case _              => sender ! Result(id, right, left, up, down, right + left + up + down)

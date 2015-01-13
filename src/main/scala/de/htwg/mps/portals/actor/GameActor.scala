@@ -6,7 +6,7 @@ import akka.actor.Actor
 import akka.actor.ActorRef
 import akka.actor.Props
 
-class MasterActor(val masterId: Int, var resultCount: Int = 0) extends Actor {
+class GameActor(val masterId: Int, var resultCount: Int = 0) extends Actor {
 
   val players = new HashMap[String, ActorRef]
   val results = new HashMap[String, Int]
@@ -14,7 +14,6 @@ class MasterActor(val masterId: Int, var resultCount: Int = 0) extends Actor {
   def receive = {
     case CreatePlayer(id) =>
         players.+=((id, context.actorOf(Props(new PlayerActor(id)), "PlayerActor_" + masterId + "_" + id)))
-//        println("Create PlayerActor: PlayerActor_" + masterId + "_" + id)
 
     case PlayerMove(id, direction) =>
       players.get(id).get ! PlayerMove(id, direction)
@@ -27,8 +26,8 @@ class MasterActor(val masterId: Int, var resultCount: Int = 0) extends Actor {
       resultCount += 1
       results.+=((id, moves))
 
-      println("Player " + (id + "     ").substring(0, 5) +
-        " - Right: " + right + " Left: " + left + " Up: " + up + " Down: " + down)
+      println("Player " + (id + "     ").substring(0, 5) + " - Right: " + right + " Left: " + left +
+          " Up: " + up + " Down: " + down)
 
       if (resultCount == players.size) {
         val moves = ListMap(results.toSeq.sortWith(_._2 > _._2): _*)

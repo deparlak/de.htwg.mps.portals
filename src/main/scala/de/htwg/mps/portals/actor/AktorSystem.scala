@@ -24,7 +24,7 @@ class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Ev
   val controller = inject[IController]
   controller.add(this)
 
-  var masterId = 1;
+  var gameID = 1;
 
   // Create an Akka system
   val config = ConfigFactory.load()
@@ -33,28 +33,24 @@ class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Ev
   val system = ActorSystem("WorkerSystem", config)
 
   // create the master
-  var master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
+  var gameActor = system.actorOf(Props(new GameActor(gameID)), name = "game" + gameID)
 
   def createMaster() {
-    system.stop(master);
-    masterId += 1
-    master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
-  }
-
-  def move(id: String, direction: Direction) {
-    master ! PlayerMove(id, direction)
+    system.stop(gameActor);
+    gameID += 1
+    gameActor = system.actorOf(Props(new GameActor(gameID)), name = "game" + gameID)
   }
 
   def update(e: Event) = {
     e match {
-      case x: NewGame =>
+      case event: NewGame =>
         createMaster()
-        controller.playground.player.foreach(x => master ! CreatePlayer(x._2.uuid))
-        master ! GameEvent(x)
-      case x: Update   => master ! PlayerMove(x.move.player.uuid, x.move.player.direction)
-      case x: GameWon  => master ! GameEvent(x)
-      case x: GameLost => master ! GameEvent(x)
-      case x: Wait     => None
+        controller.playground.player.foreach(player => gameActor ! CreatePlayer(player._2.uuid))
+        gameActor ! GameEvent(event)
+      case event: Update   => gameActor ! PlayerMove(event.move.player.uuid, event.move.player.direction)
+      case event: GameWon  => gameActor ! GameEvent(event)
+      case event: GameLost => gameActor ! GameEvent(event)
+      case event: Wait     => None
     }
   }
 
