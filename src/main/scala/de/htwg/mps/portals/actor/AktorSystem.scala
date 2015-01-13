@@ -16,36 +16,37 @@ import de.htwg.mps.portals.controller.Wait
 import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.controller.Update
 import akka.actor.ActorRef
+import de.htwg.mps.portals.controller.NewGame
 
 class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Event] with Injectable {
   val controller = inject[IController]
   controller.add(this)
 
+  var masterId = 1;
+
   // Create an Akka system
   val system = ActorSystem("WorkerSystem")
 
   // create the master
-  var master = system.actorOf(Props(new MasterActor), name = "master")
+  var master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
 
-  
-  def createActorForPlayer(id: String) {
-    if (master.isTerminated)
-      master = system.actorOf(Props(new MasterActor), name = "master2")
-      
-    master ! CreatePlayer(id)
+  def createMaster() {
+    if (master.isTerminated) {
+      masterId += 1
+      master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
+    }
   }
 
   def move(id: String, direction: Direction) {
     master ! PlayerMove(id, direction)
   }
 
-  def event(event: Event) {
-    master ! GameEvent(event)
-  }
-
   def update(e: Event) = {
     e match {
-      case x: NewGame  => master ! GameEvent(x)
+      case x: NewGame =>
+        createMaster()
+        controller.playground.player.foreach(x => master ! CreatePlayer(x._2.uuid))
+        master ! GameEvent(x)
       case x: Update   => master ! PlayerMove(x.move.player.uuid, x.move.player.direction)
       case x: GameWon  => master ! GameEvent(x)
       case x: GameLost => master ! GameEvent(x)
