@@ -14,7 +14,7 @@ class MasterActor(val masterId: Int, var resultCount: Int = 0) extends Actor {
   def receive = {
     case CreatePlayer(id) =>
         players.+=((id, context.actorOf(Props(new PlayerActor(id)), "PlayerActor_" + masterId + "_" + id)))
-        println("Create PlayerActor: PlayerActor_" + masterId + "_" + id)
+//        println("Create PlayerActor: PlayerActor_" + masterId + "_" + id)
 
     case PlayerMove(id, direction) =>
       players.get(id).get ! PlayerMove(id, direction)

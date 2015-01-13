@@ -17,6 +17,8 @@ import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.controller.Update
 import akka.actor.ActorRef
 import de.htwg.mps.portals.controller.NewGame
+import com.typesafe.config.ConfigValueFactory
+import com.typesafe.config.ConfigFactory
 
 class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Event] with Injectable {
   val controller = inject[IController]
@@ -25,16 +27,18 @@ class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Ev
   var masterId = 1;
 
   // Create an Akka system
-  val system = ActorSystem("WorkerSystem")
+  val config = ConfigFactory.load()
+     .withValue("akka.loglevel", ConfigValueFactory.fromAnyRef("OFF"))
+     .withValue("akka.stdout-loglevel", ConfigValueFactory.fromAnyRef("OFF"))
+  val system = ActorSystem("WorkerSystem", config)
 
   // create the master
   var master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
 
   def createMaster() {
-    if (master.isTerminated) {
-      masterId += 1
-      master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
-    }
+    system.stop(master);
+    masterId += 1
+    master = system.actorOf(Props(new MasterActor(masterId)), name = "master" + masterId)
   }
 
   def move(id: String, direction: Direction) {
