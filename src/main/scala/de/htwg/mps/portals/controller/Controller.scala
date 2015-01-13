@@ -36,16 +36,16 @@ class Controller(var playground: Playground = new Playground) extends IControlle
 	}
   }
   
-  private def onDestroyed(destroyed : Destroyed) {
+  def onDestroyed(destroyed : Destroyed) {
     timer.stop
     notifyObservers(GameLost())
   }
   
-  private def onPayMovement(payMovement : PayMovement) {
+  def onPayMovement(payMovement : PayMovement) {
     notifyObservers(Wait(payMovement))
   }
   
-  private def onMoved(move : Moved) {
+  def onMoved(move : Moved) {
     notifyObservers(Update(move))
     if (move.terrain.endGame) {
       timer.stop

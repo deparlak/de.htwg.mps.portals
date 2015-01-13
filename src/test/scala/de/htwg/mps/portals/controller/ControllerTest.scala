@@ -4,6 +4,20 @@ import org.specs2.mutable.SpecificationWithJUnit
 import de.htwg.mps.portals.model.Position
 import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.util.Level
+import de.htwg.mps.portals.model.Destroyed
+import de.htwg.mps.portals.model.Destroyed
+import de.htwg.mps.portals.model.Human
+import de.htwg.mps.portals.model.PayMovement
+import de.htwg.mps.portals.model.Stay
+import de.htwg.mps.portals.model.Up
+import de.htwg.mps.portals.model.PayMovement
+import de.htwg.mps.portals.model.PayMovement
+import de.htwg.mps.portals.model.Destroyed
+import de.htwg.mps.portals.model.Move
+import de.htwg.mps.portals.model.PayMovement
+import de.htwg.mps.portals.model.Moved
+import de.htwg.mps.portals.model.Terrain
+import de.htwg.mps.portals.model.Portal
 
 class ControllerTest extends SpecificationWithJUnit {
   val firstNormalLevel = new Level().firstNormalLevel
@@ -60,17 +74,19 @@ class ControllerTest extends SpecificationWithJUnit {
         controller moveDown player
         update(controller)
       }
+      controller.onMoved(new Moved(new Human("1", new Position(0,0), Stay, 0), Portal))
       controller.timer.isRunning must beFalse
     }
 
     "end the game if a the human reaches the portal" in {
       reset(controller)
+      val p = new Human("1", new Position(0,0), Stay, 0)
       val botID = controller.playground.player.get(new Position(1, 5)).get.uuid
       val player = "1"
-      for (i <- 1 to 45) {
-        controller moveRight player
-        update(controller)
-      }
+      controller moveRight player
+      controller.onPayMovement(new PayMovement(p))
+      update(controller)
+      controller.onDestroyed(new Destroyed(p,p))
       controller.timer.isRunning must beFalse
     }
 
