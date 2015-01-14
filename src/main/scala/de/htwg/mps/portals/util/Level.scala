@@ -1,10 +1,9 @@
 package de.htwg.mps.portals.util
 
-import scala.reflect.io.Path
-
 class Level {
   var mode = "normal"
   var current = 1
+  val max = 4
   
   private def getLevel(level : Int) : String =  "/level/" + mode + "/" + current.toString + ".txt"
   
@@ -15,7 +14,7 @@ class Level {
   
   def currentLevel = getLevel(current)
   
-  def hasNext : Boolean = if (null != getClass.getResource(getLevel(current + 1))) true else false
+  def hasNext : Boolean = if (max > current + 1) true else false
   
   def firstNormalLevel : String = {
     current = 1
