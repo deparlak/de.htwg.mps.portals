@@ -19,6 +19,7 @@ import scala.concurrent.duration._
 import scala.concurrent.future
 import scala.concurrent.Future
 import scala.concurrent.Awaitable
+import de.htwg.mps.portals.swing.PlayerSprites
 
 
 class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] with UserInterface with AutoInjectable {
@@ -58,7 +59,7 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
 
   def newGame() {
     val terrain = controller.playground.terrain.map{ case(position, terreain) => position -> TerrainSprite(terreain).sprite }
-    val player = controller.playground.player.map{ case(position, player) => player -> PlayerSprite(player) }
+    val player = controller.playground.player.map{ case(position, player) => player -> PlayerSprites(player) }
     
     playerAnimation.clear
     playerList.clear

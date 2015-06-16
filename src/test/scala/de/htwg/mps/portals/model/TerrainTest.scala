@@ -40,9 +40,9 @@ class TerrainTest extends SpecificationWithJUnit {
       swamp walkableBy human1 must beTrue
     }
 
-    "have a higher movemnet cost then grass" in {
+    "have a higher movement cost then grass" in {
       val grass = Grass
-      swamp.movementCost > grass.movementCost must beTrue
+      swamp.movementCost must beGreaterThan(grass.movementCost)
     }
   }
 

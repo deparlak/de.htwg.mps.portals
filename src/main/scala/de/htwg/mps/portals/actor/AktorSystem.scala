@@ -35,7 +35,7 @@ class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Ev
   // create the master
   var gameActor = system.actorOf(Props(new GameActor(gameID)), name = "game" + gameID)
 
-  def createMaster() {
+  def createGameActor() {
     system.stop(gameActor);
     gameID += 1
     gameActor = system.actorOf(Props(new GameActor(gameID)), name = "game" + gameID)
@@ -44,7 +44,7 @@ class AktorSystem(implicit val bindingModule: BindingModule) extends Observer[Ev
   def update(e: Event) = {
     e match {
       case event: NewGame =>
-        createMaster()
+        createGameActor()
         controller.playground.player.foreach(player => gameActor ! CreatePlayer(player._2.uuid))
         gameActor ! GameEvent(event)
       case event: Update   => gameActor ! PlayerMove(event.move.player.uuid, event.move.player.direction)
