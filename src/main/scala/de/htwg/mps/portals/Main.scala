@@ -18,9 +18,9 @@ object Portals extends AutoInjectable {
 
     val actorSystem = inject[AktorSystem]
 
-    val ui = inject[UserInterface]
-    //    val tui = inject[UserInterface]("tui")
-    //    val gui = inject[UserInterface]("gui")
+  //  val ui = inject[UserInterface]
+ //       val tui = inject[UserInterface]("tui")
+//        val gui = inject[UserInterface]("gui")
     
     controller.load()
   }
