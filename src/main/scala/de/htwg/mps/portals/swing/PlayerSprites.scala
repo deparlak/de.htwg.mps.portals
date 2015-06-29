@@ -18,11 +18,38 @@ case Bot2(_,_,_,_,_) => new Bot2Sprite
 
 class HumanSprite extends PlayerSprite {
   val image = "/sprite/default/player/green.png"
+  val sprites: List[Sprite] = List(
+    new Sprite(image, width, height, 0, 0),
+    new Sprite(image, width, height, -32, 0),
+    new Sprite(image, width, height, -64, 0),
+    new Sprite(image, width, height, -96, 0),
+    new Sprite(image, width, height, -128, 0),
+    new Sprite(image, width, height, -160, 0),
+    new Sprite(image, width, height, -192, 0),
+    new Sprite(image, width, height, 0, 0))
 }
 
 class Bot1Sprite extends PlayerSprite {
   val image = "/sprite/default/player/blue.png"
+  val sprites: List[Sprite] = List(
+    new Sprite(image, width, height, 0, 0),
+    new Sprite(image, width, height, -32, 0),
+    new Sprite(image, width, height, -64, 0),
+    new Sprite(image, width, height, -96, 0),
+    new Sprite(image, width, height, -128, 0),
+    new Sprite(image, width, height, -160, 0),
+    new Sprite(image, width, height, -192, 0),
+    new Sprite(image, width, height, 0, 0))
 }
 class Bot2Sprite extends PlayerSprite {
   val image = "/sprite/default/player/green.png"
+  val sprites: List[Sprite] = List(
+    new Sprite(image, width, height, 0, 0),
+    new Sprite(image, width, height, -32, 0),
+    new Sprite(image, width, height, -64, 0),
+    new Sprite(image, width, height, -96, 0),
+    new Sprite(image, width, height, -128, 0),
+    new Sprite(image, width, height, -160, 0),
+    new Sprite(image, width, height, -192, 0),
+    new Sprite(image, width, height, 0, 0))
 }

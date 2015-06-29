@@ -10,7 +10,7 @@ import de.htwg.mps.portals.config.GuiConfiguration
 import de.htwg.mps.portals.config.TuiConfiguration
 
 object Portals extends AutoInjectable {
-  implicit val bindingModule = TuiConfiguration
+  implicit val bindingModule = GuiConfiguration
 
   def main(args: Array[String]) {
     val playground = new Playground()
@@ -18,9 +18,9 @@ object Portals extends AutoInjectable {
 
     val actorSystem = inject[AktorSystem]
 
-  //  val ui = inject[UserInterface]
- //       val tui = inject[UserInterface]("tui")
-//        val gui = inject[UserInterface]("gui")
+    val ui = inject[UserInterface]
+      //  val tui = inject[UserInterface]("tui")
+     //   val gui = inject[UserInterface]("gui")
     
     controller.load()
   }

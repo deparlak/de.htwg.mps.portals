@@ -8,15 +8,7 @@ import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.swing.util._
 
 trait PlayerSprite {
-  val sprites: List[Sprite] = List(
-    new Sprite(image, width, height, 0, 0),
-    new Sprite(image, width, height, -32, 0),
-    new Sprite(image, width, height, -64, 0),
-    new Sprite(image, width, height, -96, 0),
-    new Sprite(image, width, height, -128, 0),
-    new Sprite(image, width, height, -160, 0),
-    new Sprite(image, width, height, -192, 0),
-    new Sprite(image, width, height, 0, 0))
+  val sprites: List[Sprite]
   val image: String
   val width = 32
   val height = 32

@@ -45,14 +45,7 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
 
   def update(player : Player) = {
     val visual = playerList.get(player.uuid).get
-    
-    playerAnimation.get(player.uuid) match {
-      case None 	=>  None
-      case lastMove =>  {
-        Await.result(lastMove.get, 2 seconds)
-      }
-    }
-    playerAnimation += (player.uuid -> visual.animate(player))
+    visual.animate(player)
   }
 
 
@@ -75,11 +68,14 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
         playerList += (player.uuid -> visual)
       }
       
+
       terrain foreach {case (position, t) => 
         add(t, t.width * position.x + offset, t.height * position.y)
       }
+
+
     }
-    
+
     output.contents += grid
     
     ui.visible = true

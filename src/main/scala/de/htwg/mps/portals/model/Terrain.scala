@@ -13,6 +13,7 @@ object Terrain {
 case '|' => Wall
 case ' ' => Grass
 case '.' => Dust
+case _   => Grass
   }
 }
 
@@ -22,7 +23,7 @@ case object Wall extends Terrain {
   override def endGame = false
   override def walkableBy(player : Player) = player match {
     case _ : Human => false
-    case _ : Bot1 => true
+    case _ : Bot1 => false
     case _		   => false
   }
 }
