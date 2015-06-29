@@ -111,7 +111,7 @@ class Playground(val terrain : Map[Position, Terrain] = Map(), val player : Map[
         for (
             y <- 0 to PlaygroundHeight - 1;
             x <- 0 to PlaygroundWidth - 1
-        ) yield terrain += (new Position(x, y) -> Grass)
+        ) yield terrain += (new Position(x, y) -> DefaultTerrain.get)
     
     arr.foreach(input =>
       input match {

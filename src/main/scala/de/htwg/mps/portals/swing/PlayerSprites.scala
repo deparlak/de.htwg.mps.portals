@@ -5,14 +5,15 @@ import scala.concurrent.Future
 import scala.concurrent.duration._
 import de.htwg.mps.portals.model.Player
 import de.htwg.mps.portals.swing.util._
+import de.htwg.mps.portals.swing.PlayerSprite
 import de.htwg.mps.portals.model._
 
 // companion object to get Terrain instances, like a factory method.
 object PlayerSprites {
   def apply(player : Player) : PlayerSprite = player match {
     case Human(_,_,_,_) => new HumanSprite
-case Bot1(_,_,_,_,_) => new Bot1Sprite
-case Bot2(_,_,_,_,_) => new Bot2Sprite
+case B1(_,_,_,_,_) => new B1Sprite
+case B2(_,_,_,_,_) => new B2Sprite
   }
 }
 
@@ -29,7 +30,7 @@ class HumanSprite extends PlayerSprite {
     new Sprite(image, width, height, 0, 0))
 }
 
-class Bot1Sprite extends PlayerSprite {
+class B1Sprite extends PlayerSprite {
   val image = "/sprite/default/player/blue.png"
   val sprites: List[Sprite] = List(
     new Sprite(image, width, height, 0, 0),
@@ -41,8 +42,8 @@ class Bot1Sprite extends PlayerSprite {
     new Sprite(image, width, height, -192, 0),
     new Sprite(image, width, height, 0, 0))
 }
-class Bot2Sprite extends PlayerSprite {
-  val image = "/sprite/default/player/green.png"
+class B2Sprite extends PlayerSprite {
+  val image = "/sprite/default/player/red.png"
   val sprites: List[Sprite] = List(
     new Sprite(image, width, height, 0, 0),
     new Sprite(image, width, height, -32, 0),

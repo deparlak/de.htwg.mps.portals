@@ -44,8 +44,10 @@ class Gui(implicit val bindingModule: BindingModule) extends Observer[Event] wit
   
 
   def update(player : Player) = {
-    val visual = playerList.get(player.uuid).get
-    visual.animate(player)
+    val visual = playerList.get(player.uuid)
+    if (None != visual) {
+    	visual.get.animate(player)
+    }
   }
 
 

@@ -9,10 +9,10 @@ object PlayerFactory {
       Some(Human(HumanPlayer1, position, Stay, 0))
 case 'B' =>
 	val id = java.util.UUID.randomUUID.toString
-		        Some(Bot1(id, position, Up, Stay, 0))
+		        Some(B1(id, position, Up, Stay, 0))
 case 'T' =>
 	val id = java.util.UUID.randomUUID.toString
-		        Some(Bot2(id, position, Up, Stay, 0))
+		        Some(B2(id, position, Up, Stay, 0))
     case _ => None
   }
 }
