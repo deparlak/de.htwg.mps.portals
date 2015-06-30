@@ -37,8 +37,10 @@ class Controller(var playground: Playground = new Playground) extends IControlle
   }
   
   def onDestroyed(destroyed : Destroyed) {
-    timer.stop
-    notifyObservers(GameLost())
+	  if (!destroyed.destroyed.isInstanceOf[Player]) {
+	    timer.stop
+	    notifyObservers(GameLost())
+	  }
   }
   
   def onPayMovement(payMovement : PayMovement) {
